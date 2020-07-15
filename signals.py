@@ -55,10 +55,11 @@ def smooth(signal_orig, filter_type = 'hanning', filter_width = 11, plot_on = Tr
             plt.figure(f'{filter_type} filter') 
             plt.plot(filt_numer/filt_denom)
         plt.figure('signal', figsize=(10,5))
-        plt.plot(signal_orig, color = (0.3, 0.3, 0.3), label = 'noisy signal', linewidth = 1)
+        plt.plot(signal_orig, color = (0.6, 0.6, 0.6), label = 'noisy signal', linewidth = 1)
         plt.plot(signal_smoothed, color = 'r', label = 'smoothed signal')
         plt.xlim(0, len(signal_smoothed))
         plt.grid(True)
+        plt.legend()
 
     return signal_smoothed, filt_numer/filt_denom
 
@@ -97,6 +98,8 @@ def fft(signal_orig, sampling_period, include_neg = False, plot_on = True):
                  power_spectrum)
         plt.yscale('log')
         plt.grid(True)
+        plt.xlabel('Frequency')
+        plt.ylabel('log(Power)')
         
     return sig_fft, power_spectrum, frequencies
 
@@ -113,7 +116,16 @@ if __name__ == '__main__':
                    0.18*np.cos(2 * np.pi * 3.85 * t))
     noisy_signal = pure_signal + np.random.normal(loc=0, scale = std, size = t.shape) 
     filter_width = 13
-    smoothed_signal, _ = smooth(noisy_signal, 'hanning', filter_width = 13, plot_on = True)
+    smoothed_signal, _ = smooth(noisy_signal, 'hanning', filter_width = 13, plot_on = False)
+    plt.figure('signal', figsize=(10,5))
+    plt.plot(t, noisy_signal, 'k', linewidth = 0.5, label = 'noisy')
+    plt.plot(t, smoothed_signal, 'r', label = 'smoothed')
+    plt.plot(t, pure_signal, 'g', label = 'original')
+    plt.xlim(-1, 1)
+    plt.legend()
+    plt.xlabel('t')
+    plt.ylabel('y')
+    plt.title('Testing signals.smooth')
 
     # Test fft
     f1 = 20
