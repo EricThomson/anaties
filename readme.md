@@ -1,7 +1,7 @@
 # anaties
 An analysis utilities package.
 
-This is where I will put stuff I use all the time for processing signals, images, etc.. It will grow over time right now it includes basic signal processing stuff. 
+This is where I will put stuff I use all the time for processing signals, images, etc.. It will grow over time right now it includes basic signal processing stuff.
 
 
 ## Install
@@ -24,9 +24,17 @@ anaties/
 
 ## Notes on design decisions
 ###  Why no gaussian filter?
-In `signals.py `I don't have a gaussian filter by default because I wanted to include relatively simple smoothing windows without needing to specify parameters, just the filter width, not additional filter parameters like sigma. At some point I may add a gaussian (just use `np.random.normal()`) but it is complicated enough that I will need to take a half day to do it right
+I will add it once I switch from numpy to scipy for the window functions.  
 
 ### Edge artifacts
 Handling edge artifacts can be tricky: you can pad it (with different parameters), and use Gustafsson's method. I like Gustaffson's method so went with that as the default. At some point I might tinker with that: again that will be a half day to really get it right. Frankly the decisions you make about your edges shouldn't make much difference: if they do something has probably gone wrong with your design at a previous step.
+
+
+## To add
+- FFT for basic power spectrum over entire signal
+- Time-dependent frequency (spectrogram/wavelet)
+- For smooth switch to scipy filter windows and add guassian:
+https://docs.scipy.org/doc/scipy/reference/signal.windows.html#module-scipy.signal.windows
+
 
   :)
