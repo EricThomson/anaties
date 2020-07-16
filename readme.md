@@ -13,11 +13,13 @@ Eventually I will build a way to install but for now:
 
 Optional stuff -- I install spyder. Eventually I might make notebooks in which case I'd install jupyter and nodejs.
 
-## Structure    
-Utilities are broken up into groups    
-    anaties/
-        signals.py  -- doing stuff with 1d signals
-        #images.py  -- doing stuff with 2d images -- not added yet
+What we have so far    
+
+    signals.py
+        - smooth: smooth a signal with a filter
+        - fft: get fft and power spectrum of a signal
+
+
 
 
 ## Useful sources
@@ -26,9 +28,9 @@ Utilities are broken up into groups
 - https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html
 
 ### FFT
-- https://scipy-lectures.org/intro/scipy/auto_examples/plot_fftpack.html#sphx-glr-intro-scipy-auto-examples-plot-fftpack-py
 - https://ipython-books.github.io/101-analyzing-the-frequency-components-of-a-signal-with-a-fast-fourier-transform/
-- https://www.oreilly.com/library/view/elegant-scipy/9781491922927/ch04.html
+- https://scipy-lectures.org/intro/scipy/auto_examples/plot_fftpack.html#sphx-glr-intro-scipy-auto-examples-plot-fftpack-py
+
 
 ## Notes
 ###  Why no gaussian filter?

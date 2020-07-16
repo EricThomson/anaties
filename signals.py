@@ -59,6 +59,7 @@ def smooth(signal_orig, filter_type = 'hanning', filter_width = 11, plot_on = Tr
         plt.plot(signal_smoothed, color = 'r', label = 'smoothed signal')
         plt.xlim(0, len(signal_smoothed))
         plt.grid(True)
+        plt.autoscale(enable=True, axis='x', tight=True)
         plt.legend()
 
     return signal_smoothed, filt_numer/filt_denom
@@ -136,3 +137,11 @@ if __name__ == '__main__':
     y = np.sin(f1 * 2.0*np.pi*x) + 0.5*np.sin(f2 * 2.0*np.pi*x)
     _, power_spec, freqs = fft(y, samp_pd, include_neg = False, plot_on = True)
     
+    
+    # Test spectrogram
+    
+    
+    # Test wavelet
+    
+    
+    # Test 
