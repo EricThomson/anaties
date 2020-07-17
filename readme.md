@@ -11,7 +11,9 @@ Eventually I will build a way to install but for now:
     conda install scipy numpy matplotlib
     conda install -c conda-forge opencv=4
 
-Optional stuff -- I install spyder. Eventually I might make notebooks in which case I'd install jupyter and nodejs.
+Optional stuff --
+    pip install playsound # if you wan to play sounds with spectrograms
+I install spyder. Eventually I might make notebooks in which case I'd install jupyter and nodejs.
 
 What we have so far    
 

@@ -11,20 +11,7 @@ import scipy.signal.windows as windows
 import matplotlib.pyplot as plt 
 
 
-#%% create a filter
-# different numpy windows: 
-#    https://numpy.org/doc/stable/reference/routines.window.html
-# Each window has a good page of its own
-# hanning: cosine-shape
-# blackman: more narrowly peaked
-# bartlett: triangle
-# flat: uniform density
-# gaussian: gaussian (requires sigma (std) defaults to 1)
-#
-# At edges can pad or use gustafsson's method. The latter seems better 
-# so I am just making gustafsson's the default. 
-#
-#
+#%%
 def smooth(signal_orig, filter_type = 'hanning', filter_width = 11, sigma = 2, plot_on = 1):
     """ 
     smooth a 1d signal using filtfilt to have zero phase distortion
