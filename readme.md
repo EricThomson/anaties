@@ -39,11 +39,17 @@ I will add it once I switch from numpy to scipy for the window functions.
 ### Edge artifacts
 Handling edge artifacts can be tricky: you can pad it (with different parameters), and use Gustafsson's method. I like Gustaffson's method so went with that as the default. At some point I might tinker with that: again that will be a half day to really get it right. Frankly the decisions you make about your edges shouldn't make much difference: if they do something has probably gone wrong with your design at a previous step.
 
+### What about wavelets?
+Right now for time-frequency analysis I'm going with spectrograms.  Wavelets are cool and there is a lot to be said for them in theory, but in practice with spectrograms there are a lot fewer ways to go off the rails. Wavelets require a subtle touch to get it right, and go against the plug-and-play spirit of this package. If you want to get started with wavelets in Python, I would recommend:   http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/
+
 
 ## To do
-- Time-dependent frequency (spectrogram/wavelet)
-- For smooth switch to scipy filter windows and add guassian:
-https://docs.scipy.org/doc/scipy/reference/signal.windows.html#module-scipy.signal.windows
+- Spectrograms
+- Add numerical tests with random seed set not just graphical eyeball tests.
+
+## Data sources
+- Songbird wav from
+ https://freesound.org/people/Sonic-ranger/sounds/243677/
 
 
   :)

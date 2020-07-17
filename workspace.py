@@ -20,7 +20,16 @@ wavelet stuff -- this looks amazing:
     
     compare pywavelet to this:
     https://www.mathworks.com/help/wavelet/ref/cwt.html
+    makre sure you get this:
+    https://www.mathworks.com/help/wavelet/ug/boundary-effects-and-the-cone-of-influence.html
     
+    Consider this:
+    
+        
+    And why the fuck do they plot periods nad not just convert to damned freqs?
+    
+Wavelet vs spectrogram vs harmonics vs wow.
+    https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6709234/
     
 
 """
@@ -29,26 +38,34 @@ import matplotlib.pyplot as plt
 from scipy import signal
 from scipy.io import wavfile
 
-#%% load data and plot waveform
+#%% load full data and extract duration/time points
 wav_path = r'./data/songbirds.wav'
 sample_rate, data_full = wavfile.read(wav_path)
+num_samples_full = data_full.shape[0]
 
-#%%
+duration_full = data_full.shape[0]/sample_rate
+times_full = np.linspace(0, duration_full, data_full.shape[0])
+
+print(f"Num samples total (millions): {num_samples_full/1e6}")
+print(f"Time (seconds): {duration_full}")
 
 
-#%%
-plt.plot(time, data_full[:,0], color = 'r', label = "Left")
-plt.plot(time, data_full[:,1], color = 'b', label = "Right")
+#%% plot full data
+plt.plot(data_full[:,0], color = 'r', label = "Left")
+plt.plot(data_full[:,1], color = 'b', label = "Right")
 plt.legend(loc = 'lower left')
 plt.autoscale(enable=True, axis='x', tight=True)
 
-
-#%% Just use the left: plot it
-
-data = data_full[:1_500_000, 0]
+#%% extract subset of full data
+start_ind = 3_450_000
+num_samples = 1_500_000
+data = data_full[start_ind: start_ind+num_samples, 0]
 duration = data.shape[0]/sample_rate
 times = np.linspace(0, duration, data.shape[0])
 
+print(f"Signal subset is {duration:0.2f}s starts {start_ind/sample_rate:0.2f}s in")
+
+#%% Plot subset
 plt.figure('bird signal', figsize=(12,5))
 plt.plot(times, data, color = (0.5, 0.5, 0.5), linewidth = 0.5)
 plt.xlabel('t(s)')
