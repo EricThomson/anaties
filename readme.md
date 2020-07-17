@@ -35,9 +35,6 @@ What we have so far
 
 
 ## Notes
-###  Why no gaussian filter?
-I will add it once I switch from numpy to scipy for the window functions.  
-
 ### Edge artifacts
 Handling edge artifacts can be tricky: you can pad it (with different parameters), and use Gustafsson's method. I like Gustaffson's method so went with that as the default. At some point I might tinker with that: again that will be a half day to really get it right. Frankly the decisions you make about your edges shouldn't make much difference: if they do something has probably gone wrong with your design at a previous step.
 
