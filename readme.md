@@ -48,10 +48,11 @@ Right now for time-frequency analysis I'm going with spectrograms.  Wavelets are
 ## To do
 - Spectrograms
 - Add numerical tests with random seed set not just graphical eyeball tests.
+- use simpleaudio objects to stop/start sound.
+- Make audio player that shows location in waveform.
 
 ## Data sources
-- Songbird wav from
- https://freesound.org/people/Sonic-ranger/sounds/243677/
+Songbird wav is open source and available from https://freesound.org/people/Sonic-ranger/sounds/243677/
 
-
-  :)
+## About
+Developed with the support of the Neurobehavioral Core at NIEHS: https://www.niehs.nih.gov/research/atniehs/facilities/neurobehavioral/index.cfm
