@@ -36,7 +36,7 @@ What we have so far
 
 ## Notes
 ### Edge artifacts
-Handling edge artifacts can be tricky: you can pad it (with different parameters), and use Gustafsson's method. I like Gustaffson's method so went with that as the default. At some point I might tinker with that: again that will be a half day to really get it right. Frankly the decisions you make about your edges shouldn't make much difference: if they do something has probably gone wrong with your design at a previous step.
+Handling edge artifacts can be tricky: you can pad it (with different parameters), or use Gustafsson's method. I like Gustaffson's method so went with that as the default, though at some point might tinker with that. Frankly the decisions you make about your edges shouldn't make much difference: if they do I would look at earlier decisions in your pipeline. 
 
 ### What about wavelets?
 Right now for time-frequency analysis I'm going with spectrograms.  Wavelets are cool and there is a lot to be said for them in theory, but in practice with spectrograms there are a lot fewer ways to go off the rails. Wavelets require a subtle touch to get it right, and go against the plug-and-play spirit of this package. If you want to get started with wavelets in Python, I would recommend:   http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/
@@ -45,7 +45,6 @@ Right now for time-frequency analysis I'm going with spectrograms.  Wavelets are
 ## To do
 - Spectrograms
 - Add numerical tests with random seed set not just graphical eyeball tests.
-- use simpleaudio objects to stop/start sound.
 - Make audio player that shows location in waveform.
 
 ## Data sources

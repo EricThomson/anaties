@@ -8,15 +8,17 @@ import numpy as np
 from scipy import signal
 import scipy.fftpack as fftpack
 import scipy.signal.windows as windows
+from scipy.io import wavfile
+import simpleaudio as sa
 import matplotlib.pyplot as plt 
 
 
 #%%
-def smooth(signal_orig, filter_type = 'hanning', filter_width = 11, sigma = 2, plot_on = 1):
+def smooth(signal_orig, filter_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1):
     """ 
     smooth a 1d signal using filtfilt to have zero phase distortion
     filter type options:
-        hanning (default) - cosine bump filter_width is only param
+        hann (default) - cosine bump filter_width is only param
         blackman - more narrowly peaked bump than hanning
         gaussian - sigma determines width
         boxcar - flat-top of length filter_width
@@ -36,7 +38,7 @@ def smooth(signal_orig, filter_type = 'hanning', filter_width = 11, sigma = 2, p
     """
     if filter_type == 'boxcar':
         filt_numer = windows.boxcar(filter_width)
-    elif filter_type == 'hanning':
+    elif filter_type == 'hann':
         filt_numer = windows.hann(filter_width)
     elif filter_type == 'bartlett':
         filt_numer = windows.bartlett(filter_width)
@@ -103,7 +105,55 @@ def fft(signal_orig, sampling_period, include_neg = False, plot_on = 1):
     return sig_fft, power_spectrum, frequencies
 
 
+def spectrogram(signal_orig, sampling_rate, 
+                segment_length = 1024, segment_overlap = 512, 
+                window = 'hann', plot_on = 1):
+    """ 
+    Get/plot spectrogram of signa -- wrapper for scipy.spectrogram
+    
+    Inputs:
+        signal: numpy array
+        sampling_freq (float): sampling rate (Hz)
+        segment_length (int): number of samples per segment in which to calculate STFFT (1024)
+        segment_overlap (int): overlap samples between segments (512)
+        window (string): type of window to apply to each segment to make it periodic
+        plot_on (int): 0 for no plotting, 1 to plot signal/spectrogram (0)
+    
+    Returns
+        spectrogram (num_freqs x num_time_points)
+        freqs (array of frequencies)
+        time_bins (time bin centers)
 
+    Notes:
+        - To plot use pcolormesh and 10*log10(spectrogram) else it will look weird.
+        - Windowing is not for smoothing, but to extract the data for the short-time FFT --
+           the segment_length window makes the data segment quasi-periodic (wraps around
+           values as the window drops to zero). This makes the FFT behave. Do not use
+           boxcar I would stick with hann or similar.
+    """
+    freqs, time_bins, spect = signal.spectrogram(signal_orig, 
+                                             fs = sampling_rate,
+                                             nperseg = segment_length,
+                                             noverlap = segment_overlap,
+                                             window = window)
+    if plot_on:
+        colormap ='inferno' 
+        num_samples = len(signal_orig)
+        sampling_period = 1/sampling_rate
+        duration = num_samples*sampling_period
+        times = np.linspace(0, duration, num_samples)
+        fig, axs = plt.subplots(2,1, figsize = (12,10), sharex = True)
+        axs[0].plot(times, signal_orig, color = (0.5, 0.5, 0.5), linewidth = 0.5)
+        axs[0].autoscale(enable=True, axis='x', tight=True)       
+        axs[1].pcolormesh(time_bins, freqs, 10*np.log10(spect), cmap = colormap);
+        axs[1].set_ylabel('Frequency')
+        axs[1].set_xlabel('t(s)')
+        fig.tight_layout()
+
+    
+    return spectrogram, freqs, time_bins
+    
+    
 
 #%%
 if __name__ == '__main__':
@@ -144,10 +194,21 @@ if __name__ == '__main__':
     _, power_spec, freqs = fft(y, samp_pd, include_neg = False, plot_on = True)
     plt.title('signals.fft test')
     
-    # Test spectrogram
     
-    
-
+    """
+    Test spectrogram
+    """
+    # First extract some sample audio data to analyze
+    wav_path = r'./data/songbirds.wav'
+    sample_rate, data_full = wavfile.read(wav_path)
+    start_ind = 3_450_000
+    num_samples = 300_000 #1_500_000
+    data = data_full[start_ind: start_ind+num_samples, 0]
+    segment_length = 1024
+    segment_overlap = segment_length//2
+    spectrogram(data, sample_rate, segment_length = 1024, 
+                segment_overlap = 512, window = 'hann', plot_on = 1)
+    plt.suptitle('signals.spectrogram test')
     
     
     # Test 
