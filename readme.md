@@ -20,6 +20,7 @@ What we have so far
     signals.py
         - smooth: smooth a signal with a filter
         - fft: get fft and power spectrum of a signal
+        - spectrogram: calculate/plot spectrogram of a signal
 
 
 
@@ -43,6 +44,7 @@ Right now for time-frequency analysis I'm going with spectrograms.  Wavelets are
 
 
 ## To do
+- change name of 'signal' (and 'signal_orig') in script make it data or something less likely to conflict.
 - Add numerical tests with random seed set not just graphical eyeball tests.
 - Make audio player that shows location in waveform.
 
