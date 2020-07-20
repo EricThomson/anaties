@@ -5,12 +5,11 @@ This is partly adapted from code in the scipy cookbook as well as the filtfilt d
 """
 
 import numpy as np
+import matplotlib.pyplot as plt 
 from scipy import signal
 import scipy.fftpack as fftpack
 import scipy.signal.windows as windows
 from scipy.io import wavfile
-import simpleaudio as sa
-import matplotlib.pyplot as plt 
 
 
 #%%
@@ -106,9 +105,12 @@ def fft(data, sampling_period, include_neg = False, plot_on = 1):
     return data_fft, power_spectrum, frequencies
 
 
-def spectrogram(data, sampling_rate, 
-                segment_length = 1024, segment_overlap = 512, 
-                window = 'hann', plot_on = 1):
+def spectrogram(data, 
+                sampling_rate, 
+                segment_length = 1024, 
+                segment_overlap = 512, 
+                window = 'hann', 
+                plot_on = 1):
     """ 
     Get/plot spectrogram of signa -- wrapper for scipy.spectrogram
     
@@ -132,6 +134,10 @@ def spectrogram(data, sampling_rate,
            values as the window drops to zero). This makes the FFT behave. Do not use
            boxcar I would stick with hann or similar.
     """
+    if data.ndim > 1:
+        # if array is (n,1) that is still 2d and will break spectrogram. flatten it
+        data = data.flatten()
+        
     freqs, time_bins, spect = signal.spectrogram(data, 
                                              fs = sampling_rate,
                                              nperseg = segment_length,
@@ -145,11 +151,13 @@ def spectrogram(data, sampling_rate,
         times = np.linspace(0, duration, num_samples)
         fig, axs = plt.subplots(2,1, figsize = (12,10), sharex = True)
         axs[0].plot(times, data, color = (0.5, 0.5, 0.5), linewidth = 0.5)
-        axs[0].autoscale(enable=True, axis='x', tight=True)       
+        axs[0].autoscale(enable=True, axis='x', tight=True)
+        
         axs[1].pcolormesh(time_bins, freqs, 10*np.log10(spect), cmap = colormap);
         axs[1].set_ylabel('Frequency')
         axs[1].set_xlabel('t(s)')
-        fig.tight_layout()
+        axs[1].autoscale(enable=True, axis='x', tight=True)
+        plt.tight_layout()
 
     
     return spectrogram, freqs, time_bins
@@ -194,7 +202,7 @@ if __name__ == '__main__':
     Test spectrogram
     """
     # First extract some sample audio data to analyze
-    wav_path = r'./data/songbirds.wav'
+    wav_path = r'../data/songbirds.wav'
     sample_rate, data_full = wavfile.read(wav_path)
     start_ind = 3_450_000
     num_samples = 300_000 #1_500_000

@@ -10,10 +10,9 @@ Eventually I will build a way to install but for now:
     conda install python=3.7
     conda install scipy numpy matplotlib
     conda install -c conda-forge opencv=4
+    pip install simpleaudio
 
-Optional stuff --
-    pip install playsound # if you wan to play sounds with spectrograms
-I install spyder. Eventually I might make notebooks in which case I'd install jupyter and nodejs.
+Install IDE if you want. Eventually I might make notebooks in which case I'd install jupyter and nodejs.
 
 What we have so far    
 
@@ -37,13 +36,16 @@ What we have so far
 
 ## Notes
 ### What about wavelets?
-Wavelets require a subtle touch to get it right, and go against the plug-and-play spirit of this package, so I've gone with spectrograms for now. I may add wavelets at some point, but if you want to get started with wavelets in Python, I recommend http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/
+I may add wavelets at some point for time-frequency analysis, but if you want to get started with wavelets in Python, I recommend http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/
 
 ### Edge artifacts
-Handling edge artifacts can be tricky: for now I am using Gustaffson's method  as the default, though at some point might tinker with that.
+Handling edge artifacts can be tricky: currently I use Gustaffson's method as the default, though at some point might tinker with that.
 
 ## To do
+- Limit frequencies in fft and spectrogram.
+- smooth fft?
 - Add numerical tests with random seed set not just graphical eyeball tests.
+- Long-term: autodocs (sphinx?)
 - Long-term: Make audio player that shows location in waveform for spectrogram.
 
 ## Data sources
