@@ -1,5 +1,5 @@
 # anaties
-An analysis utilities package provides a thin wrapper for useful functions I use during analysis.
+An analysis utilities package. Mostly a thin wrapper for functions I find useful in scipy and other packages.
 
 
 ## Install
