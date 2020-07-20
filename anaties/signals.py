@@ -110,6 +110,7 @@ def spectrogram(data,
                 segment_length = 1024, 
                 segment_overlap = 512, 
                 window = 'hann', 
+                freq_limits = None,
                 plot_on = 1):
     """ 
     Get/plot spectrogram of signa -- wrapper for scipy.spectrogram
@@ -120,6 +121,7 @@ def spectrogram(data,
         segment_length (int): number of samples per segment in which to calculate STFFT (1024)
         segment_overlap (int): overlap samples between segments (512)
         window (string): type of window to apply to each segment to make it periodic
+        freq_limits (2-elt array-like): low and high frequencies used only for plotting (None)
         plot_on (int): 0 for no plotting, 1 to plot signal/spectrogram (0)
     
     Returns
@@ -152,8 +154,24 @@ def spectrogram(data,
         fig, axs = plt.subplots(2,1, figsize = (12,10), sharex = True)
         axs[0].plot(times, data, color = (0.5, 0.5, 0.5), linewidth = 0.5)
         axs[0].autoscale(enable=True, axis='x', tight=True)
-        
-        axs[1].pcolormesh(time_bins, freqs, 10*np.log10(spect), cmap = colormap);
+        first_ind = 0
+        num_freqs = len(freqs)
+        second_ind = num_freqs-1        
+        if freq_limits is not None:
+            first_ind = np.where(freqs >= freq_limits[0])[0]
+            if first_ind.size == 0:
+                pass
+            else:
+                first_ind = first_ind[0]
+                second_ind = np.where(freqs >= freq_limits[1])[0]
+                if second_ind.size == 0 :
+                    pass
+                else:
+                    second_ind = second_ind[0]
+                    
+        axs[1].pcolormesh(time_bins, 
+                          freqs[first_ind:second_ind], 
+                          10*np.log10(spect[first_ind: second_ind,:]), cmap = colormap);
         axs[1].set_ylabel('Frequency')
         axs[1].set_xlabel('t(s)')
         axs[1].autoscale(enable=True, axis='x', tight=True)
@@ -209,8 +227,13 @@ if __name__ == '__main__':
     data = data_full[start_ind: start_ind+num_samples, 0]
     segment_length = 1024
     segment_overlap = segment_length//2
-    spectrogram(data, sample_rate, segment_length = 1024, 
-                segment_overlap = 512, window = 'hann', plot_on = 1)
+    spectrogram(data, 
+                sample_rate, 
+                segment_length = 1024, 
+                segment_overlap = 512, 
+                window = 'hann', 
+                freq_limits = [300, 15_000],
+                plot_on = 1)
     plt.suptitle('signals.spectrogram test')
     
     
