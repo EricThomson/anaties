@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 
 #%%
-def smooth(signal_orig, filter_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1):
+def smooth(data, filter_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1):
     """ 
     smooth a 1d signal using filtfilt to have zero phase distortion
     filter type options:
@@ -31,7 +31,7 @@ def smooth(signal_orig, filter_type = 'hann', filter_width = 11, sigma = 2, plot
         sigma (2.): scalar std deviation only used for gaussian 
         plot_on (1): int determines plotting. 0 none, 1 plot signal, 2: also plot filter
     Outputs
-        signal_smoothed: signal after being smoothed 
+        data_smoothed: signal after being smoothed 
         filter
         
     Notes: uses gustaffson's method to handle edge artifacts
@@ -47,44 +47,45 @@ def smooth(signal_orig, filter_type = 'hann', filter_width = 11, sigma = 2, plot
     elif filter_type == 'gaussian':
         filt_numer = windows.gaussian(filter_width, sigma)
     filt_denom = np.sum(filt_numer)
-    signal_smoothed = signal.filtfilt(filt_numer, filt_denom, 
-                                      signal_orig, method = "gust") #pad
+    data_smoothed = signal.filtfilt(filt_numer, filt_denom, 
+                                      data, method = "gust") #pad
 
     if plot_on:
         if plot_on > 1:
-            plt.figure(f'{filter_type} filter') 
             plt.plot(filt_numer/filt_denom)
+            plt.title(f'{filter_type} filter') 
         plt.figure('signal', figsize=(10,5))
-        plt.plot(signal_orig, color = (0.7, 0.7, 0.7), label = 'noisy signal', linewidth = 1)
-        plt.plot(signal_smoothed, color = 'r', label = 'smoothed signal')
-        plt.xlim(0, len(signal_smoothed))
+        plt.plot(data, color = (0.7, 0.7, 0.7), label = 'noisy signal', linewidth = 1)
+        plt.plot(data_smoothed, color = 'r', label = 'smoothed signal')
+        plt.xlim(0, len(data_smoothed))
+        plt.xlabel('sample')
         plt.grid(True)
         plt.autoscale(enable=True, axis='x', tight=True)
         plt.legend()
 
-    return signal_smoothed, filt_numer/filt_denom
+    return data_smoothed, filt_numer/filt_denom
 
 
-def fft(signal_orig, sampling_period, include_neg = False, plot_on = 1):
+def fft(data, sampling_period, include_neg = False, plot_on = 1):
     """ 
     Calculates fft, and power spectrum
     
     Inputs:
-        signal_orig: numpy array
+        data: numpy array
         sampling_period (float): time between samples
         include_neg (bool): include negative frequencies in result?
         plot_on (int): determines plotting (0 no, 1 yes)
         
     Outputs:
-        sig_fft: the full fft from fftpack
+        data_fft: the full fft from fftpack
         power_spectrum: the amplitude squared at each frequency
         frequencies: corresponding frequencies of power spectrum 
     
     Adapted from:
         https://ipython-books.github.io/101-analyzing-the-frequency-components-of-a-signal-with-a-fast-fourier-transform/
     """
-    sig_fft = fftpack.fft(signal_orig)
-    power_spectrum = np.abs(sig_fft)**2
+    data_fft = fftpack.fft(data)
+    power_spectrum = np.abs(data_fft)**2
     # returns frequencies given signal length and sampling period
     frequencies = fftpack.fftfreq(len(power_spectrum), sampling_period)
     
@@ -102,17 +103,17 @@ def fft(signal_orig, sampling_period, include_neg = False, plot_on = 1):
         plt.xlabel('Frequency')
         plt.ylabel('log(Power)')
         
-    return sig_fft, power_spectrum, frequencies
+    return data_fft, power_spectrum, frequencies
 
 
-def spectrogram(signal_orig, sampling_rate, 
+def spectrogram(data, sampling_rate, 
                 segment_length = 1024, segment_overlap = 512, 
                 window = 'hann', plot_on = 1):
     """ 
     Get/plot spectrogram of signa -- wrapper for scipy.spectrogram
     
     Inputs:
-        signal: numpy array
+        data: numpy array
         sampling_freq (float): sampling rate (Hz)
         segment_length (int): number of samples per segment in which to calculate STFFT (1024)
         segment_overlap (int): overlap samples between segments (512)
@@ -131,19 +132,19 @@ def spectrogram(signal_orig, sampling_rate,
            values as the window drops to zero). This makes the FFT behave. Do not use
            boxcar I would stick with hann or similar.
     """
-    freqs, time_bins, spect = signal.spectrogram(signal_orig, 
+    freqs, time_bins, spect = signal.spectrogram(data, 
                                              fs = sampling_rate,
                                              nperseg = segment_length,
                                              noverlap = segment_overlap,
                                              window = window)
     if plot_on:
         colormap ='inferno' 
-        num_samples = len(signal_orig)
+        num_samples = len(data)
         sampling_period = 1/sampling_rate
         duration = num_samples*sampling_period
         times = np.linspace(0, duration, num_samples)
         fig, axs = plt.subplots(2,1, figsize = (12,10), sharex = True)
-        axs[0].plot(times, signal_orig, color = (0.5, 0.5, 0.5), linewidth = 0.5)
+        axs[0].plot(times, data, color = (0.5, 0.5, 0.5), linewidth = 0.5)
         axs[0].autoscale(enable=True, axis='x', tight=True)       
         axs[1].pcolormesh(time_bins, freqs, 10*np.log10(spect), cmap = colormap);
         axs[1].set_ylabel('Frequency')
@@ -155,7 +156,7 @@ def spectrogram(signal_orig, sampling_rate,
     
     
 
-#%%
+#%%  run some tests
 if __name__ == '__main__':
     """
     Test smooth
@@ -171,16 +172,10 @@ if __name__ == '__main__':
     smoothed_signal, _ = smooth(noisy_signal, 
                                 filter_type = window, 
                                 filter_width = 13, 
-                                plot_on = False)
-    plt.figure('signal', figsize=(10,5))
-    plt.plot(t, noisy_signal, 'k', linewidth = 0.5, label = 'noisy')
-    plt.plot(t, smoothed_signal, 'r', label = 'smoothed')
-    plt.plot(t, pure_signal, 'g', label = 'original')
-    plt.xlim(-1, 1)
-    plt.legend()
-    plt.xlabel('t')
-    plt.ylabel('y')
+                                sigma = 3,
+                                plot_on = 2)
     plt.title(f'signals.smooth test with {window} filter')
+
 
     """
     Test fft
@@ -211,4 +206,6 @@ if __name__ == '__main__':
     plt.suptitle('signals.spectrogram test')
     
     
-    # Test 
+    
+    
+    # Test s done

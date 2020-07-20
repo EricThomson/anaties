@@ -36,17 +36,15 @@ What we have so far
 
 
 ## Notes
-### Edge artifacts
-Handling edge artifacts can be tricky: you can pad it (with different parameters), or use Gustafsson's method. I like Gustaffson's method so went with that as the default, though at some point might tinker with that. Frankly the decisions you make about your edges shouldn't make much difference: if they do I would look at earlier decisions in your pipeline.
-
 ### What about wavelets?
-Right now for time-frequency analysis I'm going with spectrograms.  Wavelets are cool and there is a lot to be said for them in theory, but in practice with spectrograms there are a lot fewer ways to go off the rails. Wavelets require a subtle touch to get it right, and go against the plug-and-play spirit of this package. If you want to get started with wavelets in Python, I would recommend:   http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/
+Wavelets require a subtle touch to get it right, and go against the plug-and-play spirit of this package, so I've gone with spectrograms for now. I may add wavelets at some point, but if you want to get started with wavelets in Python, I recommend http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/
 
+### Edge artifacts
+Handling edge artifacts can be tricky: for now I am using Gustaffson's method  as the default, though at some point might tinker with that.
 
 ## To do
-- change name of 'signal' (and 'signal_orig') in script make it data or something less likely to conflict.
 - Add numerical tests with random seed set not just graphical eyeball tests.
-- Make audio player that shows location in waveform.
+- Long-term: Make audio player that shows location in waveform for spectrogram.
 
 ## Data sources
 Songbird wav is open source and available from https://freesound.org/people/Sonic-ranger/sounds/243677/
