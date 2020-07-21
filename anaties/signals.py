@@ -11,6 +11,11 @@ import scipy.fftpack as fftpack
 import scipy.signal.windows as windows
 from scipy.io import wavfile
 
+try:
+    import simpleaudio 
+    test_audio = True
+except ImportError:
+    test_audio = False
 
 #%%
 def smooth(data, filter_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1):
@@ -65,7 +70,7 @@ def smooth(data, filter_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1
     return data_smoothed, filt_numer/filt_denom
 
 
-def fft(data, sampling_period, include_neg = False, plot_on = 1):
+def fft(data, sampling_period, include_neg = False, freq_limits = None, plot_on = 1):
     """ 
     Calculates fft, and power spectrum
     
@@ -73,6 +78,7 @@ def fft(data, sampling_period, include_neg = False, plot_on = 1):
         data: numpy array
         sampling_period (float): time between samples
         include_neg (bool): include negative frequencies in result?
+        freq_limits (2-elt array-like): low and high frequencies used only for plotting (None)
         plot_on (int): determines plotting (0 no, 1 yes)
         
     Outputs:
@@ -94,15 +100,22 @@ def fft(data, sampling_period, include_neg = False, plot_on = 1):
         power_spectrum = power_spectrum[pos_inds]
     
     if plot_on:
+        first_ind, last_ind = ind_limits(frequencies, freq_limits) 
         plt.figure('power')
-        plt.plot(frequencies, 
-                 power_spectrum)
+        plt.plot(frequencies[first_ind: last_ind], 
+                 power_spectrum[first_ind: last_ind], 
+                 color = (0.4, 0.4, 0.4),
+                 linewidth = 0.75)
         plt.yscale('log')
-        plt.grid(True)
+        plt.autoscale(enable=True, axis='x', tight=True)
         plt.xlabel('Frequency')
         plt.ylabel('log(Power)')
         
     return data_fft, power_spectrum, frequencies
+
+
+def notch_filter(data, notch_frequency):
+    pass
 
 
 def spectrogram(data, 
@@ -111,6 +124,7 @@ def spectrogram(data,
                 segment_overlap = 512, 
                 window = 'hann', 
                 freq_limits = None,
+                colormap = 'inferno',
                 plot_on = 1):
     """ 
     Get/plot spectrogram of signa -- wrapper for scipy.spectrogram
@@ -122,6 +136,7 @@ def spectrogram(data,
         segment_overlap (int): overlap samples between segments (512)
         window (string): type of window to apply to each segment to make it periodic
         freq_limits (2-elt array-like): low and high frequencies used only for plotting (None)
+        colormap (string): colormap (inferno) (see also gist_heat, twilight_shifted, jet, ocean, bone)
         plot_on (int): 0 for no plotting, 1 to plot signal/spectrogram (0)
     
     Returns
@@ -141,12 +156,11 @@ def spectrogram(data,
         data = data.flatten()
         
     freqs, time_bins, spect = signal.spectrogram(data, 
-                                             fs = sampling_rate,
-                                             nperseg = segment_length,
-                                             noverlap = segment_overlap,
-                                             window = window)
+                                                 fs = sampling_rate,
+                                                 nperseg = segment_length,
+                                                 noverlap = segment_overlap,
+                                                 window = window)
     if plot_on:
-        colormap ='inferno' 
         num_samples = len(data)
         sampling_period = 1/sampling_rate
         duration = num_samples*sampling_period
@@ -154,36 +168,48 @@ def spectrogram(data,
         fig, axs = plt.subplots(2,1, figsize = (12,10), sharex = True)
         axs[0].plot(times, data, color = (0.5, 0.5, 0.5), linewidth = 0.5)
         axs[0].autoscale(enable=True, axis='x', tight=True)
-        first_ind = 0
-        num_freqs = len(freqs)
-        second_ind = num_freqs-1        
-        if freq_limits is not None:
-            first_ind = np.where(freqs >= freq_limits[0])[0]
-            if first_ind.size == 0:
-                pass
-            else:
-                first_ind = first_ind[0]
-                second_ind = np.where(freqs >= freq_limits[1])[0]
-                if second_ind.size == 0 :
-                    pass
-                else:
-                    second_ind = second_ind[0]
-                    
+        first_ind, last_ind = ind_limits(freqs, freq_limits)          
         axs[1].pcolormesh(time_bins, 
-                          freqs[first_ind:second_ind], 
-                          10*np.log10(spect[first_ind: second_ind,:]), cmap = colormap);
+                          freqs[first_ind:last_ind], 
+                          10*np.log10(spect[first_ind: last_ind,:]), cmap = colormap);
         axs[1].set_ylabel('Frequency')
         axs[1].set_xlabel('t(s)')
         axs[1].autoscale(enable=True, axis='x', tight=True)
         plt.tight_layout()
 
+    return spect, freqs, time_bins
+
+
+
     
-    return spectrogram, freqs, time_bins
+
+# the remaining functions are helper functions that could be put in a utilities
+# file, which would be funny but...no.
+def ind_limits(data, data_limits = None):
+    """ 
+    Given increasing data, and two data limits (min and max), returns indices 
+    such that data is between those limits (inclusive).
     
+    inputs:
+        data: nondecreasing 1d np array
+        data_limits: limits of data you want to select
+    outputs:
+        first_ind: index of smallest data >= data_limits[0]
+        last_ind: index of largest data <= data_limits[1]
     
+    Helper function for signals -- used in fft and spectrogram for plotting
+    """
+    first_ind = 0
+    last_ind = -1        
+    if data_limits is not None:
+        inds = np.where((data >= data_limits[0]) & (data <= data_limits[1]))[0]
+        first_ind = inds[0]
+        last_ind = inds[-1]
+    return first_ind, last_ind
 
 #%%  run some tests
 if __name__ == '__main__':
+    plt.close('all')
     """
     Test smooth
     """
@@ -201,6 +227,7 @@ if __name__ == '__main__':
                                 sigma = 3,
                                 plot_on = 2)
     plt.title(f'signals.smooth test with {window} filter')
+    plt.show()
 
 
     """
@@ -212,8 +239,9 @@ if __name__ == '__main__':
     samp_pd = 0.01  # sampling period
     x = np.linspace(0.0, num_points*samp_pd, num_points)
     y = np.sin(f1 * 2.0*np.pi*x) + 0.5*np.sin(f2 * 2.0*np.pi*x)
-    _, power_spec, freqs = fft(y, samp_pd, include_neg = False, plot_on = True)
+    full_fft, power_spec, freqs = fft(y, samp_pd, include_neg = False, freq_limits = [5, 50], plot_on = 1)
     plt.title('signals.fft test')
+    plt.show()
     
     
     """
@@ -235,8 +263,10 @@ if __name__ == '__main__':
                 freq_limits = [300, 15_000],
                 plot_on = 1)
     plt.suptitle('signals.spectrogram test')
+    plt.show()
     
-    
-    
-    
-    # Test s done
+
+
+
+
+    # Tests done

@@ -20,7 +20,7 @@ What we have so far
         - smooth: smooth a signal with a filter
         - fft: get fft and power spectrum of a signal
         - spectrogram: calculate/plot spectrogram of a signal
-
+        - listen: play audio of signal
 
 
 
@@ -41,11 +41,12 @@ I may add wavelets at some point for time-frequency analysis, but if you want to
 ### Edge artifacts
 Handling edge artifacts can be tricky: currently I use Gustaffson's method as the default, though at some point might tinker with that.
 
+
+
 ## To do
-- Add ability to listen to filter (listen(data))
 - Add notch filter to LFP? (notch(data, freq))
 https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.iirnotch.html
-- Limit high frequencies in fft?
+- Add some noise to fft test example.
 - Add numerical tests with random seed set not just graphical eyeball tests.
 - Long-term: autodocs (sphinx?)
 - Long-term: Make audio player that shows location in waveform for spectrogram.
