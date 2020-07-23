@@ -1,5 +1,5 @@
 # anaties
-An analysis utilities package. Mostly a thin wrapper for functions I find useful in scipy and other packages.
+An analysis utilities package. So far, things I find useful for signal processing.
 
 
 ## Install
@@ -10,18 +10,17 @@ Eventually I will build a way to install but for now:
     conda install python=3.7
     conda install scipy numpy matplotlib
     conda install -c conda-forge opencv=4
-    pip install simpleaudio
 
 Install IDE if you want. Eventually I might make notebooks in which case I'd install jupyter and nodejs.
 
 What we have so far    
 
-    signals.py
+    signals.py (for 1d data arrays like LFP, sound, etc)
         - smooth: smooth a signal with a filter
         - fft: get fft and power spectrum of a signal
         - spectrogram: calculate/plot spectrogram of a signal
-        - listen: play audio of signal
-
+        - notch_filter: bandpass filter for specific frequency
+        - ind_limits: return indices that contain a range of data
 
 
 ## Useful sources
@@ -39,14 +38,12 @@ What we have so far
 I may add wavelets at some point for time-frequency analysis, but if you want to get started with wavelets in Python, I recommend http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/
 
 ### Edge artifacts
-Handling edge artifacts can be tricky: currently I use Gustaffson's method as the default, though at some point might tinker with that.
-
+Handling edge artifacts can be tricky: currently I use Gustaffson's method as the default, though at some point might tinker with that, as there are many options.
 
 
 ## To do
-- Add notch filter to LFP? (notch(data, freq))
-https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.iirnotch.html
-- Add some noise to fft test example.
+- ind_limits: add checks for data, data_limits, clarify description and docs
+- Add playback of ephys signals (see notes in audio_playback_workspace), incorporate this into some tests of filtering, etc.. simpleaudio package is too simple I think.
 - Add numerical tests with random seed set not just graphical eyeball tests.
 - Long-term: autodocs (sphinx?)
 - Long-term: Make audio player that shows location in waveform for spectrogram.

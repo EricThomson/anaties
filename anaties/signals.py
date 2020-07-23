@@ -1,7 +1,7 @@
 """
-This is partly adapted from code in the scipy cookbook as well as the filtfilt docs:
-   https://scipy-cookbook.readthedocs.io/items/FiltFilt.html 
-   https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html
+signal processing branch of anaties package
+
+https://github.com/EricThomson/anaties
 """
 
 import numpy as np
@@ -11,68 +11,65 @@ import scipy.fftpack as fftpack
 import scipy.signal.windows as windows
 from scipy.io import wavfile
 
-try:
-    import simpleaudio 
-    test_audio = True
-except ImportError:
-    test_audio = False
 
 #%%
-def smooth(data, filter_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1):
+def smooth(data, window_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1):
     """ 
-    smooth a 1d signal using filtfilt to have zero phase distortion
-    filter type options:
-        hann (default) - cosine bump filter_width is only param
-        blackman - more narrowly peaked bump than hanning
-        gaussian - sigma determines width
-        boxcar - flat-top of length filter_width
-        bartlett - triangle
-    
+    Smooth a 1d data with moving window (uses filtfilt to have zero phase distortion)
+        
     Inputs:
         signal: numpy array
-        filter_type ('hanning'): string ('boxcar', 'gaussian', 'hanning', 'bartlett', 'blackman')
+        window_type ('hanning'): string ('boxcar', 'gaussian', 'hanning', 'bartlett', 'blackman')
         filter_width (11): int (wider is more smooth) odd is ideal
         sigma (2.): scalar std deviation only used for gaussian 
         plot_on (1): int determines plotting. 0 none, 1 plot signal, 2: also plot filter
     Outputs
         data_smoothed: signal after being smoothed 
-        filter
+        filter_window: the window used for smoothing
         
-    Notes: uses gustaffson's method to handle edge artifacts
+    Notes: 
+        Uses gustaffson's method to handle edge artifacts
+        Currently accepted window_type options:
+            hann (default) - cosine bump filter_width is only param
+            blackman - more narrowly peaked bump than hann
+            boxcar - flat-top of length filter_width
+            bartlett - triangle
+            gaussian - sigma determines width
+
+
     """
-    if filter_type == 'boxcar':
-        filt_numer = windows.boxcar(filter_width)
-    elif filter_type == 'hann':
-        filt_numer = windows.hann(filter_width)
-    elif filter_type == 'bartlett':
-        filt_numer = windows.bartlett(filter_width)
-    elif filter_type == 'blackman':
-        filt_numer = windows.blackman(filter_width)
-    elif filter_type == 'gaussian':
-        filt_numer = windows.gaussian(filter_width, sigma)
-    filt_denom = np.sum(filt_numer)
-    data_smoothed = signal.filtfilt(filt_numer, filt_denom, 
+    if window_type == 'boxcar':
+        filter_window = windows.boxcar(filter_width)
+    elif window_type == 'hann':
+        filter_window = windows.hann(filter_width)
+    elif window_type == 'bartlett':
+        filter_window = windows.bartlett(filter_width)
+    elif window_type == 'blackman':
+        filter_window = windows.blackman(filter_width)
+    elif window_type == 'gaussian':
+        filter_window = windows.gaussian(filter_width, sigma)
+    filter_window = filter_window/np.sum(filter_window)
+    data_smoothed = signal.filtfilt(filter_window, 1, 
                                       data, method = "gust") #pad
 
     if plot_on:
         if plot_on > 1:
-            plt.plot(filt_numer/filt_denom)
-            plt.title(f'{filter_type} filter') 
+            plt.plot(filter_window)
+            plt.title(f'{window_type} filter') 
         plt.figure('signal', figsize=(10,5))
         plt.plot(data, color = (0.7, 0.7, 0.7), label = 'noisy signal', linewidth = 1)
         plt.plot(data_smoothed, color = 'r', label = 'smoothed signal')
         plt.xlim(0, len(data_smoothed))
         plt.xlabel('sample')
         plt.grid(True)
-        plt.autoscale(enable=True, axis='x', tight=True)
         plt.legend()
 
-    return data_smoothed, filt_numer/filt_denom
+    return data_smoothed, filter_window
 
 
 def fft(data, sampling_period, include_neg = False, freq_limits = None, plot_on = 1):
     """ 
-    Calculates fft, and power spectrum
+    Calculates fft, and power spectrum, of 1d data
     
     Inputs:
         data: numpy array
@@ -114,8 +111,44 @@ def fft(data, sampling_period, include_neg = False, freq_limits = None, plot_on 
     return data_fft, power_spectrum, frequencies
 
 
-def notch_filter(data, notch_frequency):
-    pass
+def notch_filter(data, notch_frequency, sampling_frequency, quality_factor = 35., plot_on = 1):
+    """
+    Apply a notch filter at notch_frequency to 1d data (can remove 60Hz for instance)
+    
+    Inputs:
+        data (1d numpy array)
+        notch_frequency: the frequency you want removed
+        sampling_frequency: frequency (Hz) at which data was sampled
+        quality_factor (float): sets bandwidth of notch filter (35)
+        plot_on (int): 0 to not plot, 1 to plot filter, original, and filtered signals
+        
+    Outputs:
+        data_filtered (1d numpy array) -- same size as data, but filtered
+        b: numerator filter coeffecient array
+        a: denominator filter coefficient array
+    """
+
+    b, a = signal.iirnotch(notch_frequency, quality_factor, sampling_frequency)
+    data_filtered = signal.filtfilt(b, a, data)
+    
+    if plot_on: 
+        # Frequency response
+        freq, h = signal.freqz(b, a, fs = sampling_frequency)
+        plt.figure('notch')
+        plt.subplot(311)
+        plt.plot(freq, 20*np.log10(abs(h)))
+        plt.autoscale(enable=True, axis='x', tight=True)
+    
+        # Original signal and filtered version of signal
+        plt.subplot(312)
+        plt.plot(data, color = (0.2, 0.2, 0.2), linewidth = 1)
+        plt.autoscale(enable=True, axis='x', tight=True)
+        plt.subplot(313)
+        plt.plot(data_filtered, color = (0.2, 0.2, 0.2), linewidth = 1)
+        plt.autoscale(enable=True, axis='x', tight=True)
+        plt.tight_layout()
+        
+    return data_filtered, b, a
 
 
 def spectrogram(data, 
@@ -125,7 +158,7 @@ def spectrogram(data,
                 window = 'hann', 
                 freq_limits = None,
                 colormap = 'inferno',
-                plot_on = 1):
+                plot_on = 0):
     """ 
     Get/plot spectrogram of signa -- wrapper for scipy.spectrogram
     
@@ -161,6 +194,7 @@ def spectrogram(data,
                                                  noverlap = segment_overlap,
                                                  window = window)
     if plot_on:
+        print("Plotting spectrogram")
         num_samples = len(data)
         sampling_period = 1/sampling_rate
         duration = num_samples*sampling_period
@@ -180,11 +214,6 @@ def spectrogram(data,
     return spect, freqs, time_bins
 
 
-
-    
-
-# the remaining functions are helper functions that could be put in a utilities
-# file, which would be funny but...no.
 def ind_limits(data, data_limits = None):
     """ 
     Given increasing data, and two data limits (min and max), returns indices 
@@ -197,7 +226,8 @@ def ind_limits(data, data_limits = None):
         first_ind: index of smallest data >= data_limits[0]
         last_ind: index of largest data <= data_limits[1]
     
-    Helper function for signals -- used in fft and spectrogram for plotting
+    To do:
+        Add checks for 1d data, increasing data, data_limits.
     """
     first_ind = 0
     last_ind = -1        
@@ -221,11 +251,11 @@ if __name__ == '__main__':
     noisy_signal = pure_signal + np.random.normal(loc=0, scale = std, size = t.shape) 
     filter_width = 13
     window = 'gaussian'
-    smoothed_signal, _ = smooth(noisy_signal, 
-                                filter_type = window, 
-                                filter_width = 13, 
-                                sigma = 3,
-                                plot_on = 2)
+    smoothed_signal, gauss_window = smooth(noisy_signal, 
+                                           window_type = window, 
+                                           filter_width = 13, 
+                                           sigma = 3,
+                                           plot_on = 1)
     plt.title(f'signals.smooth test with {window} filter')
     plt.show()
 
@@ -239,7 +269,11 @@ if __name__ == '__main__':
     samp_pd = 0.01  # sampling period
     x = np.linspace(0.0, num_points*samp_pd, num_points)
     y = np.sin(f1 * 2.0*np.pi*x) + 0.5*np.sin(f2 * 2.0*np.pi*x)
-    full_fft, power_spec, freqs = fft(y, samp_pd, include_neg = False, freq_limits = [5, 50], plot_on = 1)
+    full_fft, power_spec, freqs = fft(y, 
+                                      samp_pd, 
+                                      include_neg = False, 
+                                      freq_limits = [5, 50], 
+                                      plot_on = 1)
     plt.title('signals.fft test')
     plt.show()
     
@@ -262,9 +296,29 @@ if __name__ == '__main__':
                 window = 'hann', 
                 freq_limits = [300, 15_000],
                 plot_on = 1)
-    plt.suptitle('signals.spectrogram test')
+    plt.suptitle('signals.spectrogram test', y = 1)
     plt.show()
+
     
+
+    """
+    Test notch filter
+    """
+    f1 = 17
+    f2 = 60
+    notch_frequency = 60
+    sampling_frequency = 1000
+    duration = 1
+    t = np.linspace(0.0, duration, duration*sampling_frequency)
+    data = np.sin(f1 * 2.0*np.pi*t) + np.sin(f2 * 2.0*np.pi*t) 
+    filtered_data, b, a = notch_filter(data, 
+                                       notch_frequency, 
+                                       sampling_frequency, 
+                                       quality_factor = 35., 
+                                       plot_on = 1)
+    plt.suptitle('signals.notch filter test', y = 1)
+    plt.show()
+
 
 
 
