@@ -13,13 +13,13 @@ Eventually I will build a way to install but for now:
 
 Install IDE if you want. Eventually I might make notebooks in which case I'd install jupyter and nodejs.
 
-What we have so far    
+Brief summary of utilities:  
 
     signals.py (for 1d data arrays like LFP, sound, etc)
-        - smooth: smooth a signal with a filter
+        - smooth: smooth a signal with a window (gaussian, etc)
         - fft: get fft and power spectrum of a signal
         - spectrogram: calculate/plot spectrogram of a signal
-        - notch_filter: bandpass filter for specific frequency
+        - notch_filter: bandpass filter at specific frequency
         - ind_limits: return indices that contain a range of data
 
 
