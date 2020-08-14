@@ -1,5 +1,5 @@
 """
-signal processing branch of anaties package
+signal processing functions for anaties package
 
 https://github.com/EricThomson/anaties
 """
@@ -10,12 +10,13 @@ from scipy import signal
 import scipy.fftpack as fftpack
 import scipy.signal.windows as windows
 from scipy.io import wavfile
+import helpers
 
 
 #%%
 def smooth(data, window_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1):
     """ 
-    Smooth a 1d data with moving window (uses filtfilt to have zero phase distortion)
+    Smooth 1d data with moving window (uses filtfilt to have zero phase distortion)
         
     Inputs:
         signal: numpy array
@@ -35,7 +36,6 @@ def smooth(data, window_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1
             boxcar - flat-top of length filter_width
             bartlett - triangle
             gaussian - sigma determines width
-
 
     """
     if window_type == 'boxcar':
@@ -97,7 +97,7 @@ def fft(data, sampling_period, include_neg = False, freq_limits = None, plot_on 
         power_spectrum = power_spectrum[pos_inds]
     
     if plot_on:
-        first_ind, last_ind = ind_limits(frequencies, freq_limits) 
+        first_ind, last_ind = helpers.ind_limits(frequencies, freq_limits) 
         plt.figure('power')
         plt.plot(frequencies[first_ind: last_ind], 
                  power_spectrum[first_ind: last_ind], 
@@ -194,7 +194,6 @@ def spectrogram(data,
                                                  noverlap = segment_overlap,
                                                  window = window)
     if plot_on:
-        print("Plotting spectrogram")
         num_samples = len(data)
         sampling_period = 1/sampling_rate
         duration = num_samples*sampling_period
@@ -202,7 +201,7 @@ def spectrogram(data,
         fig, axs = plt.subplots(2,1, figsize = (12,10), sharex = True)
         axs[0].plot(times, data, color = (0.5, 0.5, 0.5), linewidth = 0.5)
         axs[0].autoscale(enable=True, axis='x', tight=True)
-        first_ind, last_ind = ind_limits(freqs, freq_limits)          
+        first_ind, last_ind = helpers.ind_limits(freqs, freq_limits)          
         axs[1].pcolormesh(time_bins, 
                           freqs[first_ind:last_ind], 
                           10*np.log10(spect[first_ind: last_ind,:]), cmap = colormap);
@@ -214,28 +213,7 @@ def spectrogram(data,
     return spect, freqs, time_bins
 
 
-def ind_limits(data, data_limits = None):
-    """ 
-    Given increasing data, and two data limits (min and max), returns indices 
-    such that data is between those limits (inclusive).
-    
-    inputs:
-        data: nondecreasing 1d np array
-        data_limits: limits of data you want to select
-    outputs:
-        first_ind: index of smallest data >= data_limits[0]
-        last_ind: index of largest data <= data_limits[1]
-    
-    To do:
-        Add checks for 1d data, increasing data, data_limits.
-    """
-    first_ind = 0
-    last_ind = -1        
-    if data_limits is not None:
-        inds = np.where((data >= data_limits[0]) & (data <= data_limits[1]))[0]
-        first_ind = inds[0]
-        last_ind = inds[-1]
-    return first_ind, last_ind
+
 
 #%%  run some tests
 if __name__ == '__main__':
@@ -243,6 +221,7 @@ if __name__ == '__main__':
     """
     Test smooth
     """
+    print("anaties.signals: testing smooth()...")
     std = 0.4
     t = np.linspace(-1, 1, 201)
     pure_signal = (np.sin(2 * np.pi * 0.75 * t*(1-t) + 2.1) + 
@@ -263,6 +242,7 @@ if __name__ == '__main__':
     """
     Test fft
     """
+    print("\nanaties.signals: testing fft()...")
     f1 = 20
     f2 = 33
     num_points = 600   # Number of points
@@ -304,6 +284,7 @@ if __name__ == '__main__':
     """
     Test notch filter
     """
+    print("\nanaties.signals: testing notch_filter()...")
     f1 = 17
     f2 = 60
     notch_frequency = 60
@@ -322,5 +303,5 @@ if __name__ == '__main__':
 
 
 
-
+    print("\nanaties.signals: tests done...")
     # Tests done

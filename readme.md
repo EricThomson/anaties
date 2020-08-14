@@ -38,10 +38,12 @@ Brief summary of utilities:
 I may add wavelets at some point for time-frequency analysis, but if you want to get started with wavelets in Python, I recommend http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/
 
 ### Edge artifacts
-Handling edge artifacts can be tricky: currently I use Gustaffson's method as the default, though at some point might tinker with that, as there are many options.
+Handling edge artifacts can be tricky: currently I use Gustaffson's method as the default, though at some point might tinker with that -- there are many options.
 
 
 ## To do
+- Add optional events to spectrogram
+- stop feeding start_time as input unless needed: calculate event times right away don't use raw event times. 
 - ind_limits: add checks for data, data_limits, clarify description and docs
 - Add playback of ephys signals (see notes in audio_playback_workspace), incorporate this into some tests of filtering, etc.. simpleaudio package is too simple I think.
 - Add numerical tests with random seed set not just graphical eyeball tests.
