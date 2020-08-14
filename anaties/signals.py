@@ -4,13 +4,18 @@ signal processing functions for anaties package
 https://github.com/EricThomson/anaties
 """
 
+import sys
+from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt 
 from scipy import signal
 import scipy.fftpack as fftpack
 import scipy.signal.windows as windows
 from scipy.io import wavfile
-import helpers 
+
+
+sys.path.append(str(Path('.').absolute().parent))
+import anaties.helpers as helpy
 
 
 #%%
@@ -97,7 +102,7 @@ def fft(data, sampling_period, include_neg = False, freq_limits = None, plot_on 
         power_spectrum = power_spectrum[pos_inds]
     
     if plot_on:
-        first_ind, last_ind = helpers.ind_limits(frequencies, freq_limits) 
+        first_ind, last_ind = helpy.ind_limits(frequencies, freq_limits) 
         plt.figure('power')
         plt.plot(frequencies[first_ind: last_ind], 
                  power_spectrum[first_ind: last_ind], 
@@ -157,7 +162,7 @@ def spectrogram(data,
                 segment_overlap = 512, 
                 window = 'hann', 
                 freq_limits = None,
-                events_all = None,
+                all_events = None,
                 colormap = 'inferno',
                 plot_on = 0):
     """ 
@@ -170,7 +175,7 @@ def spectrogram(data,
         segment_overlap (int): overlap samples between segments (512)
         window (string): type of window to apply to each segment to make it periodic
         freq_limits (2-elt array-like): low and high frequencies used only for plotting (None)
-        events_all (list of lists): times to show vertical bands for events, used for plotting
+        all_events (list of lists): times to show vertical bands for events, used for plotting
         colormap (string): colormap (inferno) (see also gist_heat, twilight_shifted, jet, ocean, bone)
         plot_on (int): 0 for no plotting, 1 to plot signal/spectrogram (0)
     
@@ -180,11 +185,14 @@ def spectrogram(data,
         time_bins (time bin centers)
 
     Notes:
-        - To plot use pcolormesh and 10*log10(spectrogram) else it will look weird.
+        - To plot use pcolormesh and 10*log10(spectrogram) otherwise it will look weird.
         - Windowing is not for smoothing, but to extract the data for the short-time FFT --
            the segment_length window makes the data segment quasi-periodic (wraps around
            values as the window drops to zero). This makes the FFT behave. Do not use
            boxcar I would stick with hann or similar.
+    To do
+        - I had it using different colors for different events but removed this. Maybe add
+        this feature back at some point.
     """
     if data.ndim > 1:
         # if array is (n,1) that is still 2d and will break spectrogram. flatten it
@@ -205,7 +213,7 @@ def spectrogram(data,
         axs[0].plot(times, data, color = (0.5, 0.5, 0.5), linewidth = 0.5)
         axs[0].autoscale(enable=True, axis='x', tight=True)
         # Plot spectrogram
-        first_ind, last_ind = helpers.ind_limits(freqs, freq_limits)   
+        first_ind, last_ind = helpy.ind_limits(freqs, freq_limits)   
         axs[1].pcolormesh(time_bins, 
                           freqs[first_ind:last_ind], 
                           10*np.log10(spect[first_ind: last_ind,:]), cmap = colormap);
@@ -213,8 +221,8 @@ def spectrogram(data,
         axs[1].set_xlabel('t(s)')
         axs[1].autoscale(enable=True, axis='x', tight=True)
         # Plot events
-        if events_all is not None:
-            for event_ind, events in enumerate(events_all):
+        if all_events is not None:
+            for event_ind, events in enumerate(all_events):
                 for event in events:
                     axs[0].axvline(x = event, zorder = 3, color = 'k', linewidth = 1)
                     axs[0].axvline(x = event, zorder = 3, color = 'k', linewidth = 1)
@@ -289,7 +297,7 @@ if __name__ == '__main__':
                 segment_overlap = 512, 
                 window = 'hann', 
                 freq_limits = [300, 15_000],
-                events_all = [event1, event2],
+                all_events = [event1, event2],
                 plot_on = 1)
     plt.suptitle('signals.spectrogram test', y = 1)
     plt.show()

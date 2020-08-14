@@ -3,8 +3,13 @@ generic helper functions for anaties package
 
 https://github.com/EricThomson/anaties
 """
+import sys
+from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
+
+sys.path.append(str(Path('.').absolute().parent))
+
 
 def rand_rgb(num_vals):
     """
