@@ -10,7 +10,7 @@ from scipy import signal
 import scipy.fftpack as fftpack
 import scipy.signal.windows as windows
 from scipy.io import wavfile
-import helpers
+import helpers 
 
 
 #%%
@@ -157,6 +157,7 @@ def spectrogram(data,
                 segment_overlap = 512, 
                 window = 'hann', 
                 freq_limits = None,
+                events_all = None,
                 colormap = 'inferno',
                 plot_on = 0):
     """ 
@@ -169,6 +170,7 @@ def spectrogram(data,
         segment_overlap (int): overlap samples between segments (512)
         window (string): type of window to apply to each segment to make it periodic
         freq_limits (2-elt array-like): low and high frequencies used only for plotting (None)
+        events_all (list of lists): times to show vertical bands for events, used for plotting
         colormap (string): colormap (inferno) (see also gist_heat, twilight_shifted, jet, ocean, bone)
         plot_on (int): 0 for no plotting, 1 to plot signal/spectrogram (0)
     
@@ -193,21 +195,31 @@ def spectrogram(data,
                                                  nperseg = segment_length,
                                                  noverlap = segment_overlap,
                                                  window = window)
-    if plot_on:
+    if plot_on:           
         num_samples = len(data)
         sampling_period = 1/sampling_rate
         duration = num_samples*sampling_period
         times = np.linspace(0, duration, num_samples)
         fig, axs = plt.subplots(2,1, figsize = (12,10), sharex = True)
+        # Plot raw signal
         axs[0].plot(times, data, color = (0.5, 0.5, 0.5), linewidth = 0.5)
         axs[0].autoscale(enable=True, axis='x', tight=True)
-        first_ind, last_ind = helpers.ind_limits(freqs, freq_limits)          
+        # Plot spectrogram
+        first_ind, last_ind = helpers.ind_limits(freqs, freq_limits)   
         axs[1].pcolormesh(time_bins, 
                           freqs[first_ind:last_ind], 
                           10*np.log10(spect[first_ind: last_ind,:]), cmap = colormap);
         axs[1].set_ylabel('Frequency')
         axs[1].set_xlabel('t(s)')
         axs[1].autoscale(enable=True, axis='x', tight=True)
+        # Plot events
+        if events_all is not None:
+            for event_ind, events in enumerate(events_all):
+                for event in events:
+                    axs[0].axvline(x = event, zorder = 3, color = 'k', linewidth = 1)
+                    axs[0].axvline(x = event, zorder = 3, color = 'k', linewidth = 1)
+                    axs[1].axvline(x = event, zorder = 3, color = 'k', linewidth = 1)
+                    axs[1].axvline(x = event, zorder = 3, color = 'k', linewidth = 1)
         plt.tight_layout()
 
     return spect, freqs, time_bins
@@ -269,12 +281,15 @@ if __name__ == '__main__':
     data = data_full[start_ind: start_ind+num_samples, 0]
     segment_length = 1024
     segment_overlap = segment_length//2
+    event1 = [1.86, 5.3]
+    event2 = [2.86, 6.3]
     spectrogram(data, 
                 sample_rate, 
                 segment_length = 1024, 
                 segment_overlap = 512, 
                 window = 'hann', 
                 freq_limits = [300, 15_000],
+                events_all = [event1, event2],
                 plot_on = 1)
     plt.suptitle('signals.spectrogram test', y = 1)
     plt.show()

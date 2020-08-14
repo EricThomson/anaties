@@ -42,8 +42,8 @@ Handling edge artifacts can be tricky: currently I use Gustaffson's method as th
 
 
 ## To do
-- Add optional events to spectrogram
-- stop feeding start_time as input unless needed: calculate event times right away don't use raw event times. 
+- Add (optional) events to spectrogram
+- stop feeding start_time as input unless needed: calculate event times right away don't use raw event times.
 - ind_limits: add checks for data, data_limits, clarify description and docs
 - Add playback of ephys signals (see notes in audio_playback_workspace), incorporate this into some tests of filtering, etc.. simpleaudio package is too simple I think.
 - Add numerical tests with random seed set not just graphical eyeball tests.
