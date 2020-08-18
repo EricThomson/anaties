@@ -116,6 +116,7 @@ def fft(data, sampling_period, include_neg = False, freq_limits = None, plot_on 
     return data_fft, power_spectrum, frequencies
 
 
+
 def notch_filter(data, notch_frequency, sampling_frequency, quality_factor = 35., plot_on = 1):
     """
     Apply a notch filter at notch_frequency to 1d data (can remove 60Hz for instance)
@@ -132,25 +133,34 @@ def notch_filter(data, notch_frequency, sampling_frequency, quality_factor = 35.
         b: numerator filter coeffecient array
         a: denominator filter coefficient array
     """
-
+    if data.ndim > 1:
+        # if array is (n,1) that is still 2d and will break spectrogram. flatten it
+        data = data.flatten()
+        print(data.shape)
+        
     b, a = signal.iirnotch(notch_frequency, quality_factor, sampling_frequency)
     data_filtered = signal.filtfilt(b, a, data)
     
     if plot_on: 
         # Frequency response
         freq, h = signal.freqz(b, a, fs = sampling_frequency)
-        plt.figure('notch')
-        plt.subplot(311)
-        plt.plot(freq, 20*np.log10(abs(h)))
-        plt.autoscale(enable=True, axis='x', tight=True)
-    
+        ig, axs = plt.subplots(3,1, figsize = (12,10))
+        # Filter
+        axs[0].plot(freq, 20*np.log10(abs(h)))
+        axs[0].autoscale(enable=True, axis='x', tight=True)
+        axs[0].set_xlabel('Frequency')
+        axs[0].set_ylabel('Power')
         # Original signal and filtered version of signal
-        plt.subplot(312)
-        plt.plot(data, color = (0.2, 0.2, 0.2), linewidth = 1)
-        plt.autoscale(enable=True, axis='x', tight=True)
-        plt.subplot(313)
-        plt.plot(data_filtered, color = (0.2, 0.2, 0.2), linewidth = 1)
-        plt.autoscale(enable=True, axis='x', tight=True)
+        axs[1].plot(data, color = (0.2, 0.2, 0.2), linewidth = 1)
+        axs[1].autoscale(enable=True, axis='x', tight=True)
+        axs[2].plot(data_filtered, 
+                    color = (0.2, 0.2, 0.2), 
+                    linewidth = 1)
+        axs[2].autoscale(enable=True, axis='x', tight=True)
+        axs[2].set_xlabel('Sample')
+        axs[2].get_shared_x_axes().join(axs[1], axs[2])
+        axs[2].get_shared_y_axes().join(axs[1], axs[2])
+        plt.suptitle('Notch filtered Data', y = 1)
         plt.tight_layout()
         
     return data_filtered, b, a
@@ -224,10 +234,8 @@ def spectrogram(data,
         if all_events is not None:
             for event_ind, events in enumerate(all_events):
                 for event in events:
-                    axs[0].axvline(x = event, zorder = 3, color = 'k', linewidth = 1)
-                    axs[0].axvline(x = event, zorder = 3, color = 'k', linewidth = 1)
-                    axs[1].axvline(x = event, zorder = 3, color = 'k', linewidth = 1)
-                    axs[1].axvline(x = event, zorder = 3, color = 'k', linewidth = 1)
+                    axs[0].axvline(x = event, zorder = 3, color = 'k', linewidth = 0.5)
+                    axs[1].axvline(x = event, zorder = 3, color = 'k', linewidth = 0.5)
         plt.tight_layout()
 
     return spect, freqs, time_bins

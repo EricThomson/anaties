@@ -1,5 +1,5 @@
 # anaties
-An analysis utilities package. So far, things I find useful for signal processing.
+An analysis utilities package. Mostly things I find useful for signal processing.
 
 
 ## Install
@@ -20,8 +20,11 @@ Brief summary of utilities:
         - fft: get fft and power spectrum of a signal
         - spectrogram: calculate/plot spectrogram of a signal
         - notch_filter: bandpass filter at specific frequency
-        - ind_limits: return indices that contain a range of data
 
+
+    helpers.py (generic utility functions for use everywhere)
+        - ind_limits: return indices that contain a range of data
+        - rand_rgb: returns random array of rgb values useful for plotting
 
 ## Useful sources
 ### Smoothing
