@@ -1,17 +1,5 @@
 # anaties
-An analysis utilities package. Mostly things I find useful for signal processing.
-
-
-## Install
-Eventually I will build a way to install but for now:
-
-    conda create -n anaties
-    conda activate anaties
-    conda install python=3.7
-    conda install scipy numpy matplotlib
-    conda install -c conda-forge opencv=4
-
-Install IDE if you want. Eventually I might make notebooks in which case I'd install jupyter and nodejs.
+An analysis utilities package. Pretty much just really common things, like signal smoothing, that I find myself using in multiple projects.
 
 Brief summary of utilities:  
 
@@ -23,8 +11,20 @@ Brief summary of utilities:
 
 
     helpers.py (generic utility functions for use everywhere)
-        - ind_limits: return indices that contain a range of data
+        - datetime_string : return date_time string to use for naming files etc
+        - ind_limits: return indices containing data within a range
         - rand_rgb: returns random array of rgb values useful for plotting
+
+## Install
+Eventually I will build a builder, but for now:
+
+    conda create -n anaties
+    conda activate anaties
+    conda install python=3.7
+    conda install scipy numpy matplotlib
+    conda install -c conda-forge opencv=4
+
+Voila.
 
 ## Useful sources
 ### Smoothing
@@ -38,21 +38,20 @@ Brief summary of utilities:
 
 ## Notes
 ### What about wavelets?
-I may add wavelets at some point for time-frequency analysis, but if you want to get started with wavelets in Python, I recommend http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/
+I may add wavelets at some point, but it isn't plug-and-play enough for this repo. If you want to get started with wavelets in Python, I recommend http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/
 
 ### Edge artifacts
 Handling edge artifacts can be tricky: currently I use Gustaffson's method as the default, though at some point might tinker with that -- there are many options.
 
+## Acknowledgments
+- Songbird wav is open source from: https://freesound.org/people/Sonic-ranger/sounds/243677/
+- Developed with the support of NIH Bioinformatics, and the Neurobehavioral Core at NIEHS.
 
 ## To do
+- add ability to control event colors in spectrogram.
+- Should I be subtracting mean before taking fft?
 - ind_limits: add checks for data, data_limits, clarify description and docs
-- Add playback of ephys signals (see notes in audio_playback_workspace), incorporate this into some tests of filtering, etc.. simpleaudio package is too simple I think.
+- Add audio playback of signals (see notes in audio_playback_workspace), incorporate this into some tests of filtering, etc.. simpleaudio package is too simple I think.
 - Add numerical tests with random seed set not just graphical eyeball tests.
 - Long-term: autodocs (sphinx?)
 - Long-term: Make audio player that shows location in waveform for spectrogram.
-
-## Data sources
-Songbird wav is open source and available from https://freesound.org/people/Sonic-ranger/sounds/243677/
-
-## About
-Developed with the support of the Neurobehavioral Core at NIEHS: https://www.niehs.nih.gov/research/atniehs/facilities/neurobehavioral/index.cfm
