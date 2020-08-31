@@ -79,7 +79,7 @@ def fft(data, sampling_period, include_neg = False, freq_limits = None, plot_on 
     Inputs:
         data: numpy array
         sampling_period (float): time between samples
-        include_neg (bool): include negative frequencies in result?
+        include_neg (bool): include negative frequencies in result
         freq_limits (2-elt array-like): low and high frequencies used only for plotting (None)
         plot_on (int): determines plotting (0 no, 1 yes)
         
@@ -87,11 +87,14 @@ def fft(data, sampling_period, include_neg = False, freq_limits = None, plot_on 
         data_fft: the full fft from fftpack
         power_spectrum: the amplitude squared at each frequency
         frequencies: corresponding frequencies of power spectrum 
+           from samp_freq/num_points up to samp_freq/2, in increments of samp_freq/num_points
+           so to increase resolution increase frequency or number of points
     
     Adapted from:
         https://ipython-books.github.io/101-analyzing-the-frequency-components-of-a-signal-with-a-fast-fourier-transform/
     """
-    data_fft = fftpack.fft(data)
+    data_dc = data - np.mean(data)  # remove dc component so it doesn't spill over
+    data_fft = fftpack.fft(data_dc)
     power_spectrum = np.abs(data_fft)**2
     # returns frequencies given signal length and sampling period
     frequencies = fftpack.fftfreq(len(power_spectrum), sampling_period)
@@ -191,7 +194,7 @@ def spectrogram(data,
     
     Returns
         spectrogram (num_freqs x num_time_points)
-        freqs (array of frequencies)
+        freqs (array of frequencies): from `sampling_rate/segment_length` up to `sampling_rate/2`
         time_bins (time bin centers)
 
     Notes:
@@ -205,14 +208,14 @@ def spectrogram(data,
         this feature back at some point.
     """
     if data.ndim > 1:
-        # if array is (n,1) that is still 2d and will break spectrogram. flatten it
         data = data.flatten()
         
     freqs, time_bins, spect = signal.spectrogram(data, 
                                                  fs = sampling_rate,
                                                  nperseg = segment_length,
                                                  noverlap = segment_overlap,
-                                                 window = window)
+                                                 window = window,
+                                                 detrend = 'constant')  #removes mean from each segment
     if plot_on:           
         num_samples = len(data)
         sampling_period = 1/sampling_rate
@@ -271,12 +274,13 @@ if __name__ == '__main__':
     Test fft
     """
     print("\nanaties.signals: testing fft()...")
+    scaling_factor = 1  #for showing linearity of fft if you want
     f1 = 20
     f2 = 33
     num_points = 600   # Number of points
     samp_pd = 0.01  # sampling period
     x = np.linspace(0.0, num_points*samp_pd, num_points)
-    y = np.sin(f1 * 2.0*np.pi*x) + 0.5*np.sin(f2 * 2.0*np.pi*x)
+    y = scaling_factor*(np.sin(f1 * 2.0*np.pi*x) + 0.5*np.sin(f2 * 2.0*np.pi*x))
     full_fft, power_spec, freqs = fft(y, 
                                       samp_pd, 
                                       include_neg = False, 
@@ -299,14 +303,14 @@ if __name__ == '__main__':
     segment_overlap = segment_length//2
     event1 = [1.86, 5.3]
     event2 = [2.86, 6.3]
-    spectrogram(data, 
-                sample_rate, 
-                segment_length = 1024, 
-                segment_overlap = 512, 
-                window = 'hann', 
-                freq_limits = [300, 15_000],
-                all_events = [event1, event2],
-                plot_on = 1)
+    spect, spect_freqs, spect_time_bins = spectrogram(data, 
+                                                      sample_rate, 
+                                                      segment_length = 1024, 
+                                                      segment_overlap = 512, 
+                                                      window = 'hann', 
+                                                      freq_limits = [300, 15_000],
+                                                      all_events = [event1, event2],
+                                                      plot_on = 1)
     plt.suptitle('signals.spectrogram test', y = 1)
     plt.show()
 

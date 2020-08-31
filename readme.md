@@ -1,9 +1,10 @@
 # anaties
-An analysis utilities package. Pretty much just really common things, like signal smoothing, that I find myself using in multiple projects.
+
+An analysis utilities package. Common operations like signal smoothing that I find myself using in multiple projects.
 
 Brief summary of utilities:  
 
-    signals.py (for 1d data arrays like LFP, sound, etc)
+    signals.py (for 1d data arrays like voltage, sound, etc)
         - smooth: smooth a signal with a window (gaussian, etc)
         - fft: get fft and power spectrum of a signal
         - spectrogram: calculate/plot spectrogram of a signal
@@ -24,7 +25,7 @@ Eventually I will build a builder, but for now:
     conda install scipy numpy matplotlib
     conda install -c conda-forge opencv=4
 
-Voila.
+Voila. I import signals as signals, helpers as helpy.
 
 ## Useful sources
 ### Smoothing
@@ -37,11 +38,17 @@ Voila.
 
 
 ## Notes
-### What about wavelets?
-I may add wavelets at some point, but it isn't plug-and-play enough for this repo. If you want to get started with wavelets in Python, I recommend http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/
+### Notes on FFT/spectrogram
+- I subtract the mean of the signal/window before computing the power spectrum: otherwise the zero frequency power can spill over into lower frequencies.
+- For the fft/spectrogram, the frequency components go from `samp_freq/num_points` up to `samp_freq/2`, in increments of `samp_freq/num_points`. To increase your frequency resolution, either increase your sampling rate, or number of points (`segment_length` for spectrogram).
 
 ### Edge artifacts
 Handling edge artifacts can be tricky: currently I use Gustaffson's method as the default, though at some point might tinker with that -- there are many options.
+
+### What about wavelets?
+I may add wavelets at some point, but it isn't plug-and-play enough for this repo. If you want to get started with wavelets in Python, I recommend http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/
+
+
 
 ## Acknowledgments
 - Songbird wav is open source from: https://freesound.org/people/Sonic-ranger/sounds/243677/
