@@ -56,7 +56,6 @@ I may add wavelets at some point, but it isn't plug-and-play enough for this rep
 
 ## To do
 - add ability to control event colors in spectrogram.
-- Should I be subtracting mean before taking fft?
 - ind_limits: add checks for data, data_limits, clarify description and docs
 - Add audio playback of signals (see notes in audio_playback_workspace), incorporate this into some tests of filtering, etc.. simpleaudio package is too simple I think.
 - Add numerical tests with random seed set not just graphical eyeball tests.
