@@ -55,6 +55,9 @@ I may add wavelets at some point, but it isn't plug-and-play enough for this rep
 - Developed with the support of NIH Bioinformatics, and the Neurobehavioral Core at NIEHS.
 
 ## To do
+- Add threshold to spectrogram plot?
+- change 'freq_limits' (misleading) to 'view_range'
+- Need to add something about time resolution, how to control it withi segment_overlap.
 - add ability to control event colors in spectrogram.
 - ind_limits: add checks for data, data_limits, clarify description and docs
 - Add audio playback of signals (see notes in audio_playback_workspace), incorporate this into some tests of filtering, etc.. simpleaudio package is too simple I think.
