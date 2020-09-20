@@ -8,7 +8,8 @@ Brief summary of utilities:
         - smooth: smooth a signal with a window (gaussian, etc)
         - fft: get fft and power spectrum of a signal
         - spectrogram: calculate/plot spectrogram of a signal
-        - notch_filter: bandpass filter at specific frequency
+        - notch_filter: band stop filter to attenuate specific frequency (e.g. 60hz)
+        - bandpass_filter: allow frequencies within low- and high-cutoff through
 
 
     helpers.py (generic utility functions for use everywhere)
@@ -38,9 +39,8 @@ Voila. I import signals as signals, helpers as helpy.
 
 
 ## Notes
-### Notes on FFT/spectrogram
-- I subtract the mean of the signal/window before computing the power spectrum: otherwise the zero frequency power can spill over into lower frequencies.
-- For the fft/spectrogram, the frequency components go from `samp_freq/num_points` up to `samp_freq/2`, in increments of `samp_freq/num_points`. To increase your frequency resolution, either increase your sampling rate, or number of points (`segment_length` for spectrogram).
+### Notes on FFT
+Replace PSD with the spectrum package, or at least Welch's method: https://pyspectrum.readthedocs.io/en/latest/
 
 ### Edge artifacts
 Handling edge artifacts can be tricky: currently I use Gustaffson's method as the default, though at some point might tinker with that -- there are many options.
@@ -55,9 +55,12 @@ I may add wavelets at some point, but it isn't plug-and-play enough for this rep
 - Developed with the support of NIH Bioinformatics, and the Neurobehavioral Core at NIEHS.
 
 ## To do
+- In smoother, consider switching from filtfilt() to sosfiltfilt() for reasons laid out here: https://dsp.stackexchange.com/a/17255/51564
+- Convert notch filter to sos?
+- Make power spectrume stimation better than fft ffs (at *least* use welch):
+https://github.com/cokelaer/spectrum
+https://pyspectrum.readthedocs.io/en/latest/
 - Add threshold to spectrogram plot?
-- change 'freq_limits' (misleading) to 'view_range'
-- Need to add something about time resolution, how to control it withi segment_overlap.
 - add ability to control event colors in spectrogram.
 - ind_limits: add checks for data, data_limits, clarify description and docs
 - Add audio playback of signals (see notes in audio_playback_workspace), incorporate this into some tests of filtering, etc.. simpleaudio package is too simple I think.

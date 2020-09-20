@@ -13,7 +13,6 @@ import scipy.fftpack as fftpack
 import scipy.signal.windows as windows
 from scipy.io import wavfile
 
-
 sys.path.append(str(Path('.').absolute().parent))
 import anaties.helpers as helpy
 
@@ -22,6 +21,8 @@ import anaties.helpers as helpy
 def smooth(data, window_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1):
     """ 
     Smooth 1d data with moving window (uses filtfilt to have zero phase distortion)
+    Wrapper for scipy.signal.filtfilt 
+    To do: consider replacing with sosfiltfilt
         
     Inputs:
         signal: numpy array
@@ -72,15 +73,16 @@ def smooth(data, window_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1
     return data_smoothed, filter_window
 
 
-def fft(data, sampling_period, include_neg = False, freq_limits = None, plot_on = 1):
+def fft(data, sampling_period, include_neg = False, view_range = None, plot_on = 1):
     """ 
     Calculates fft, and power spectrum, of 1d data
+    Wrapper for scipy.fftpack.fft
     
     Inputs:
         data: numpy array
         sampling_period (float): time between samples
         include_neg (bool): include negative frequencies in result
-        freq_limits (2-elt array-like): low and high frequencies used only for plotting (None)
+        view_range (2-elt array-like): low and high frequencies used only for plotting (None)
         plot_on (int): determines plotting (0 no, 1 yes)
         
     Outputs:
@@ -105,7 +107,7 @@ def fft(data, sampling_period, include_neg = False, freq_limits = None, plot_on 
         power_spectrum = power_spectrum[pos_inds]
     
     if plot_on:
-        first_ind, last_ind = helpy.ind_limits(frequencies, freq_limits) 
+        first_ind, last_ind = helpy.ind_limits(frequencies, view_range) 
         plt.figure('power')
         plt.plot(frequencies[first_ind: last_ind], 
                  power_spectrum[first_ind: last_ind], 
@@ -119,10 +121,61 @@ def fft(data, sampling_period, include_neg = False, freq_limits = None, plot_on 
     return data_fft, power_spectrum, frequencies
 
 
+def bandpass_filter(data, lowcut, highcut, sampling_frequency, order=5, plot_on = 0):
+    """ 
+    Bandpass filter signal between locut and highcut frequencies
+    Uses butterworth second order section. 
+    Wrapper for scipy.signal.butter
+    Adapted from: https://stackoverflow.com/a/48677312/1886357
+    
+    Inputs:
+        data (1d numpy array)
+        lowcut: low cutoff frequency
+        highcut: high cutoff frequency
+        sampling_frequency: frequency (Hz) at which data was sampled
+        order: order of filter (higher is sharper corners) (5)
+        plot_on (int): 0 no plot, 1 to plot filter, original, and filtered signals
+        
+    Outputs:
+        data_filtered (1d numpy array) -- same size as data, but filtered
+        butter_sos: butterworth bandpass filter (second order section)
+   
+    """
+    nyq = 0.5 * sampling_frequency
+    low = lowcut / nyq
+    high = highcut / nyq
+    butter_sos = signal.butter(order, [low, high], analog=False, btype='band', output='sos')
+    filtered_data = signal.sosfiltfilt(butter_sos, data)
+    if plot_on:
+        print("Plotting")
+        #  Filter
+        w, h = signal.sosfreqz(butter_sos, worN=2000)
+        plt.subplot(2,1,1)
+        plt.plot((sampling_frequency * 0.5 / np.pi) * w, abs(h))
+        plt.axvline(lowcut, color = 'r', linewidth = 0.5)
+        plt.axvline(highcut, color = 'r', linewidth = 0.5)
+        plt.ylabel('Gain')
+        plt.xlabel('Frequency')
+        plt.autoscale(enable=True, axis='x', tight=True)
+        
+        # Data: original and filtered
+        plt.subplot(2,1,2)
+        plt.plot(data, color = (0.7, 0.7, 0.7), linewidth = 0.5)
+        plt.plot(filtered_data, color = 'r', linewidth = 1)
+        plt.xlabel('Sample')
+        plt.ylabel('Value')
+        plt.autoscale(enable=True, axis='x', tight=True)
+        
+        plt.tight_layout()
+        
+    return filtered_data, butter_sos
+    
+
 
 def notch_filter(data, notch_frequency, sampling_frequency, quality_factor = 35., plot_on = 1):
     """
     Apply a notch filter at notch_frequency to 1d data (can remove 60Hz for instance)
+    Wrapper for scipy.signal.iirnotch
     
     Inputs:
         data (1d numpy array)
@@ -174,20 +227,21 @@ def spectrogram(data,
                 segment_length = 1024, 
                 segment_overlap = 512, 
                 window = 'hann', 
-                freq_limits = None,
+                view_range = None,
                 all_events = None,
                 colormap = 'inferno',
                 plot_on = 0):
     """ 
-    Get/plot spectrogram of signa -- wrapper for scipy.spectrogram
+    Get/plot spectrogram of signal
+    Wrapper for scipy.spectrogram
     
     Inputs:
         data: numpy array
         sampling_freq (float): sampling rate (Hz)
         segment_length (int): number of samples per segment in which to calculate STFFT (1024)
-        segment_overlap (int): overlap samples between segments (512)
+        segment_overlap (int): overlap samples between segments (512) (must be less than segment_length)
         window (string): type of window to apply to each segment to make it periodic
-        freq_limits (2-elt array-like): low and high frequencies used only for plotting (None)
+        view_range (2-elt array-like): low and high frequencies used only for plotting (None)
         all_events (list of lists): times to show vertical bands for events, used for plotting
         colormap (string): colormap (inferno) (see also gist_heat, twilight_shifted, jet, ocean, bone)
         plot_on (int): 0 for no plotting, 1 to plot signal/spectrogram (0)
@@ -195,7 +249,7 @@ def spectrogram(data,
     Returns
         spectrogram (num_freqs x num_time_points)
         freqs (array of frequencies): from `sampling_rate/segment_length` up to `sampling_rate/2`
-        time_bins (time bin centers)
+        time_bins (time bin centers): can control resolution w/segment_overlap. DeltaT = (segment_length-segment_overlap)/sampling_freq
 
     Notes:
         - To plot use pcolormesh and 10*log10(spectrogram) otherwise it will look weird.
@@ -226,7 +280,7 @@ def spectrogram(data,
         axs[0].plot(times, data, color = (0.5, 0.5, 0.5), linewidth = 0.5)
         axs[0].autoscale(enable=True, axis='x', tight=True)
         # Plot spectrogram
-        first_ind, last_ind = helpy.ind_limits(freqs, freq_limits)   
+        first_ind, last_ind = helpy.ind_limits(freqs, view_range)   
         axs[1].pcolormesh(time_bins, 
                           freqs[first_ind:last_ind], 
                           10*np.log10(spect[first_ind: last_ind,:]), cmap = colormap);
@@ -284,7 +338,7 @@ if __name__ == '__main__':
     full_fft, power_spec, freqs = fft(y, 
                                       samp_pd, 
                                       include_neg = False, 
-                                      freq_limits = [5, 50], 
+                                      view_range = [5, 50], 
                                       plot_on = 1)
     plt.title('signals.fft test')
     plt.show()
@@ -308,7 +362,7 @@ if __name__ == '__main__':
                                                       segment_length = 1024, 
                                                       segment_overlap = 512, 
                                                       window = 'hann', 
-                                                      freq_limits = [300, 15_000],
+                                                      view_range = [300, 15_000],
                                                       all_events = [event1, event2],
                                                       plot_on = 1)
     plt.suptitle('signals.spectrogram test', y = 1)
@@ -334,6 +388,28 @@ if __name__ == '__main__':
                                        plot_on = 1)
     plt.suptitle('signals.notch filter test', y = 1)
     plt.show()
+
+
+    """
+    test bandpass filter
+    """
+    print("\nanaties.signals: testing bandpass_filter()...")
+    samp_freq = 1000  # Sample frequency (Hz)
+    f1 = 13
+    f2 = 27
+    f3 = 60
+    std = 0.4
+    num_points = 3_000   # Number of points
+    samp_freq = 2000 #
+    samp_pd = 1/samp_freq  # sampling period
+    duration = num_points * samp_pd
+    t = np.linspace(0.0, duration, num_points)
+    y_pure = np.sin(f1 * 2.0*np.pi*t) + np.sin(f2 * 2.0*np.pi*t) + np.sin(f3 * 2.0*np.pi*t)
+    y_noisy = y_pure +  np.random.normal(loc=0, scale = std, size = y_pure.shape) 
+    low_cut = 20
+    high_cut = 34
+    filter_order = 5  #can mess with t his
+    filtered_y, sos_filter =  bandpass_filter(y_noisy, low_cut, high_cut, samp_freq, order=5, plot_on = 1)
 
 
 
