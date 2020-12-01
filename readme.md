@@ -11,11 +11,13 @@ Brief summary of utilities:
         - notch_filter: band stop filter to attenuate specific frequency (e.g. 60hz)
         - bandpass_filter: allow frequencies within low- and high-cutoff through
 
+    plots.py (basic plotting wrappers)
+        - freqhist: plot a frequency histogram
 
     helpers.py (generic utility functions for use everywhere)
         - datetime_string : return date_time string to use for naming files etc
-        - ind_limits: return indices containing data within a range
-        - rand_rgb: returns random array of rgb values useful for plotting
+        - ind_limits: return indices that contain data within a range
+        - rand_rgb: returns random array of rgb values
 
 ## Install
 Eventually I will build a builder, but for now:
@@ -26,7 +28,7 @@ Eventually I will build a builder, but for now:
     conda install scipy numpy matplotlib
     conda install -c conda-forge opencv=4
 
-Voila. I import signals as signals, helpers as helpy.
+Voila. I import signals as signals, helpers as helpy, plots as plots.
 
 ## Useful sources
 ### Smoothing
@@ -55,6 +57,7 @@ I may add wavelets at some point, but it isn't plug-and-play enough for this rep
 - Developed with the support of NIH Bioinformatics, and the Neurobehavioral Core at NIEHS.
 
 ## To do
+- For freqhist should I guarantee it sums to 1 even when bin widths don't match data limits? Probably not. Something to think about though.
 - In smoother, consider switching from filtfilt() to sosfiltfilt() for reasons laid out here: https://dsp.stackexchange.com/a/17255/51564
 - Convert notch filter to sos?
 - Make power spectrume stimation better than fft ffs (at *least* use welch):
