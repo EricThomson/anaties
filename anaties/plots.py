@@ -13,7 +13,9 @@ sys.path.append(str(Path('.').absolute().parent))
 
 def freqhist(data, bins, color = 'k'):
     """
-    plot relative frequency histogram (instead of density or count) 
+    plot relative frequency histogram (instead of density or count). Wrapper for
+    matplotlib hist with tweaks for freq hist. Based on discussion at github:
+    https://github.com/matplotlib/matplotlib/issues/10398#issuecomment-366021979
    
     Inputs:
         data: 1d array of values
@@ -24,9 +26,6 @@ def freqhist(data, bins, color = 'k'):
         draws frequency histogram such that all the binned data would sum to 1 
           Will only sum to 1 if bin edges contain full range of values
         n: array of histogram bin values
-   
-    Based on discussion at github:
-    https://github.com/matplotlib/matplotlib/issues/10398#issuecomment-366021979
     """
     n, _, _ = plt.hist(data, bins, color = color, weights = np.ones(len(data))/len(data), density = False)
     return n
