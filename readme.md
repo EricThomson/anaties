@@ -35,14 +35,15 @@ Voila. I import signals as signals, helpers as helpy, plots as plots.
 - https://scipy-cookbook.readthedocs.io/items/FiltFilt.html
 - https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html
 
-### FFT
+### FFT (this needs to be replaced with Welch)
 - https://ipython-books.github.io/101-analyzing-the-frequency-components-of-a-signal-with-a-fast-fourier-transform/
 - https://scipy-lectures.org/intro/scipy/auto_examples/plot_fftpack.html#sphx-glr-intro-scipy-auto-examples-plot-fftpack-py
 
 
 ## Notes
 ### Notes on FFT
-Replace PSD with the spectrum package, or at least Welch's method: https://pyspectrum.readthedocs.io/en/latest/
+Replace PSD with the spectrum package, or at least Welch's method:
+https://pyspectrum.readthedocs.io/en/latest/
 
 ### Edge artifacts
 Handling edge artifacts can be tricky: currently I use Gustaffson's method as the default, though at some point might tinker with that -- there are many options.
@@ -57,6 +58,10 @@ I may add wavelets at some point, but it isn't plug-and-play enough for this rep
 - Developed with the support of NIH Bioinformatics, and the Neurobehavioral Core at NIEHS.
 
 ## To do
+- Replace fft with welch it is *way* better for getting power spectrum.
+- For specgrogram add denoising (e.g., 60hz) and filtering options.
+- Add plot-shader.
+- Do I want data-scroller or not? Talk to Baca about this.
 - For freqhist should I guarantee it sums to 1 even when bin widths don't match data limits? Probably not. Something to think about though.
 - In smoother, consider switching from filtfilt() to sosfiltfilt() for reasons laid out here: https://dsp.stackexchange.com/a/17255/51564
 - Convert notch filter to sos?
