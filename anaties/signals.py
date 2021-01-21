@@ -219,11 +219,8 @@ def notch_filter(data, notch_frequency, sampling_frequency, quality_factor = 35.
         b: numerator filter coeffecient array
         a: denominator filter coefficient array
     """
-    if data.ndim > 1:
-        # if array is (n,1) that is still 2d and will break spectrogram. flatten it
-        data = data.flatten()
-        print(data.shape)
-        
+    data = data.flatten()
+
     b, a = signal.iirnotch(notch_frequency, quality_factor, sampling_frequency)
     data_filtered = signal.filtfilt(b, a, data)
     
