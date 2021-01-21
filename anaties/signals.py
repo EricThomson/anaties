@@ -25,7 +25,7 @@ def smooth(data, window_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1
     To do: consider replacing with sosfiltfilt
         
     Inputs:
-        signal: numpy array
+        data: numpy array
         window_type ('hanning'): string ('boxcar', 'gaussian', 'hanning', 'bartlett', 'blackman')
         filter_width (11): int (wider is more smooth) odd is ideal
         sigma (2.): scalar std deviation only used for gaussian 
@@ -71,6 +71,36 @@ def smooth(data, window_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1
         plt.legend()
 
     return data_smoothed, filter_window
+
+
+def smooth_rows(data, window_type = 'hann', filter_width = 11, sigma = 2):
+    """ 
+    Smooth each row of a 2d array: uses smooth() 
+        
+    Inputs:
+        data: nxm numpy array
+        window_type ('hanning'): string ('boxcar', 'gaussian', 'hanning', 'bartlett', 'blackman')
+        filter_width (11): int (wider is more smooth) odd is ideal
+        sigma (2.): scalar std deviation only used for gaussian window
+        plot_on (1): int determines plotting. 0 none, 1 plot signal, 2: also plot filter
+    Outputs
+        data_smoothed: signal after being smoothed (nxm 2d array)
+        filter_window: the window used for smoothing
+        
+    Notes: 
+        Calls 'smooth()' and applies to each row of data array
+        Uses gustaffson's method to handle edge artifacts
+        Currently accepted window_type options:
+            hann (default) - cosine bump filter_width is only param
+            blackman - more narrowly peaked bump than hann
+            boxcar - flat-top of length filter_width
+            bartlett - triangle
+            gaussian - sigma determines width
+    """
+    nrows, ncols = data.shape
+    #maybe use apply_along_axis and some clever use of lambda here? or just a loop?
+    print("not implemented")
+    return
 
 
 def fft(data, sampling_period, include_neg = False, view_range = None, plot_on = 1):
