@@ -16,8 +16,40 @@ def datetime_string():
     """
     create a datetime string of form _YYYYMMDD_HHMMSS (year month day _ hour minute second)
     useful for creating filenames
+    
+    Inputs: None
+    
+    Outputs:
+        Single string of form' '_YYYYMMDD_HHMMSS' (year month day _ hour minute second)
     """
     return datetime.datetime.now().strftime("_%Y%m%d_%H%M%S")
+
+
+def get_offdiag_vals(array):
+    """
+    For a symmetric array of values, pull the lower diagonal values 
+    (not including the diagonal elements), and indices. Useful for 
+    things like arrays of pairwise correlation/distances when you 
+    want to extract the unique values but not diagonal.
+    
+    Inputs:
+        array: nxn symmetric matrix of values.
+        
+    Outputs:
+        values: M = (n^2-n)/2-element array of values in the original 2d array
+        indices: (row_inds, col_inds) tuple containing M-ary array of indices 
+
+    Notes
+        To reconstruct values from array: array[indices]
+        
+    Adapted from:
+        https://stackoverflow.com/a/44395030/1886357   
+    """
+    assert is_symmetric(array), print("get_offdiag_vals() only works on symmetric arrays")
+    num_rows = array.shape[0]
+    offdiag_indices = np.tril_indices(num_rows, k = -1) #get indices of lower diag, not inclucing diagonal
+    offdiag_values = array[offdiag_indices]
+    return offdiag_values, offdiag_indices
 
 
 def ind_limits(data, data_limits = None):
@@ -44,25 +76,60 @@ def ind_limits(data, data_limits = None):
     return first_ind, last_ind
 
 
+def is_symmetric(array):
+    """
+    Test if a numpy array is symmetric (is A = A')
+    Inputs: 
+        array: nxm numpy array (only nxn can be symmetric)
+        
+    Returns:
+        boolean: symmetry result
+    """
+    if np.array_equal(array, array.T):
+        return True
+    else:
+        return False
+    
+
 def rand_rgb(num_vals):
     """
     return random rgb vals between 0-1 in Nx3 numpy array. 
+    Can be fed to plt.scatter c keyword to generate random colors.
+    
     inputs:
         num_vals (int): number of rgb values wanted
-    outputs:
+        
+    Outputs:
         rgb_vals: num_vals x 3 numpy array. To access element i: rgb_vals[i,]
     """
     rgb_vals = np.random.rand(num_vals,3)
     return rgb_vals
 
 
+
 if __name__ == '__main__':
     print("\nTesting anaties.helpers...")
     """
-    Test datetime_string
+    Test datetime_string()
     """
     print("\nanaties.helpers: testing datetime_string()...")
     print(f"string generated: {datetime_string()}")
+    
+    
+    """
+    Test get_offdiag_vals()
+    """
+    print("\nanaties.helpers: testing get_offdiag_vals()...")
+    test_mat = np.asarray([[1,2,3,4],
+                           [2,5,7,8],
+                           [3,7,5,12],
+                           [4,8,12,5]])
+    vals, inds = get_offdiag_vals(test_mat)
+    print(f"Array:\n{test_mat}")
+    print(f"Values: {vals}")
+    print(f"Inds:\nRow:{inds[0]}\nCol:{inds[1]}")
+
+    
     
     """
     Test ind_limits
@@ -76,14 +143,29 @@ if __name__ == '__main__':
     
 
     """
+    Test is_symmetric
+    """
+    print("\nanaties.helpers: testing is_symmetric()...")
+    test_mat = np.asarray([[1,2,3,4],
+                           [5,6,7,8],
+                           [9,10,11,12],
+                           [13,14,15,16]])
+    symm_output = is_symmetric(test_mat)
+    print(f"Array:\n{test_mat}\nSymmetry: {symm_output}")
+    
+
+
+    """
     test get_rgb
     """
     print("\nanaties.helpers: testing rand_rgb()...")
+    print("Generating a plot...")
     num_points = 20
     x_vals = np.arange(num_points)
     y_vals = x_vals**2
     plt.scatter(x_vals, y_vals, c = rand_rgb(num_points))
-    plt.title('rand_rgb() test -- do you see a rainbow?')
+    plt.title('rand_rgb() test -- do you see  random colors?')
+    plt.show()
  
 
     print("\nanaties.helpers: tests done...")   

@@ -16,7 +16,9 @@ Brief summary of utilities:
 
     helpers.py (generic utility functions for use everywhere)
         - datetime_string : return date_time string to use for naming files etc
-        - ind_limits: return indices that contain data within a range
+        - get_offdiag_vals: get lower off-diagonal values of a symmetric matrix
+        - ind_limits: return indices that contain array data within range
+        - is_symmetric: check if 2d array is symmetric
         - rand_rgb: returns random array of rgb values
 
 ## Install

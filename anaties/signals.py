@@ -273,7 +273,7 @@ def spectrogram(data,
         colormap (string): colormap (inferno) (see also gist_heat, twilight_shifted, jet, ocean, bone)
         plot_on (int): 0 for no plotting, 1 to plot signal/spectrogram (0)
     
-    Returns
+    Outputs:
         spectrogram (num_freqs x num_time_points)
         freqs (array of frequencies): from `sampling_rate/segment_length` up to `sampling_rate/2`
         time_bins (time bin centers): can control resolution w/segment_overlap. DeltaT = (segment_length-segment_overlap)/sampling_freq
