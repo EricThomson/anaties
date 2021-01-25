@@ -8,11 +8,11 @@ Brief summary of utilities:
         - smooth: smooth a signal with a window (gaussian, etc)
         - fft: get fft and power spectrum of a signal
         - spectrogram: calculate/plot spectrogram of a signal
-        - notch_filter: band stop filter to attenuate specific frequency (e.g. 60hz)
-        - bandpass_filter: allow frequencies within low- and high-cutoff through
+        - notch_filter: notch filter to attenuate specific frequency (e.g. 60hz)
+        - bandpass_filter: allow through frequencies within low- and high-cutoff
 
     plots.py (basic plotting wrappers)
-        - freqhist: plot a frequency histogram
+        - freqhist: calculate/plot a relative frequency histogram
 
     helpers.py (generic utility functions for use everywhere)
         - datetime_string : return date_time string to use for naming files etc
