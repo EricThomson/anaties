@@ -76,19 +76,28 @@ def ind_limits(data, data_limits = None):
     return first_ind, last_ind
 
 
-def is_symmetric(array):
+def is_symmetric(array, abs_tol = 1e-8, rel_tol = 1e-5):
     """
-    Test if a numpy array is symmetric (is A = A')
+    Test if a numpy array is symmetric, within tolerance levels (is A = A')
+    If either tolerance val is set to None, then no tolerance is used and
+    uses strict equality (good for integer or other non-float array).
+                   
     Inputs: 
         array: nxm numpy array (only nxn can be symmetric)
         
     Returns:
-        boolean: symmetry result
+        symmetric (boolean): is matrix symmetric or not?
+        
+    Adapted from:
+        https://stackoverflow.com/a/42913743/1886357
+        https://stackoverflow.com/a/65909907/1886357
     """
-    if np.array_equal(array, array.T):
-        return True
+    if abs_tol == None or rel_tol == None:
+        symmetry =  np.array_equal(array, array.T)
     else:
-        return False
+        symmetry = np.allclose(array, array.T, rtol = abs_tol, atol = abs_tol)
+            
+    return symmetry
     
 
 def rand_rgb(num_vals):

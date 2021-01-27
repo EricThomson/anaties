@@ -53,7 +53,9 @@ Handling edge artifacts can be tricky: currently I use Gustaffson's method as th
 ### What about wavelets?
 I may add wavelets at some point, but it isn't plug-and-play enough for this repo. If you want to get started with wavelets in Python, I recommend http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/
 
-
+### Tolerance values
+For a discussion of the difference between relative and absolute tolerance values when testing floats for equality, for instance as used in `helpers.is_symmetric()`, see:
+ https://stackoverflow.com/questions/65909842/what-is-rtol-for-in-numpys-allclose-function
 
 ## Acknowledgments
 - Songbird wav is open source from: https://freesound.org/people/Sonic-ranger/sounds/243677/
