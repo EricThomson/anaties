@@ -1,5 +1,4 @@
 # anaties
-
 An analysis utilities package. Common operations like signal smoothing that I find myself using in multiple projects.
 
 Brief summary of utilities:  
@@ -22,15 +21,22 @@ Brief summary of utilities:
         - rand_rgb: returns random array of rgb values
 
 ## Install
-Eventually I will build a builder, but for now:
+I will build a conda installer eventually. For now, just go to the folder where you want the anaties folder placed, and:
 
-    conda create -n anaties
-    conda activate anaties
-    conda install python=3.7
-    conda install scipy numpy matplotlib
-    conda install -c conda-forge opencv=4
+    git clone https://github.com/EricThomson/anaties
 
-Voila. I import signals as signals, helpers as helpy, plots as plots.
+To get it to work within your virtual environment, make sure you have the dependencies installed (scipy, numpy, matplotlib).
+
+Then, in any script you are in, you can import it with:
+
+    sys.path.append(anaties_path)
+    from anaties import signals as sig
+    from anaties import helpers as helpy
+
+Where `anaties_path` is the path to the anaties folder where you cloned the package (e.g., 'x/y/z/anaties/')
+
+Later if you want to update the package, you can just do `git pull` from within `anaties_path`.
+
 
 ## Useful sources
 ### Smoothing
@@ -63,9 +69,9 @@ For a discussion of the difference between relative and absolute tolerance value
 
 ## To do
 - Replace fft with welch it is *way* better for getting power spectrum.
-- For specgrogram add denoising (e.g., 60hz) and filtering options.
+- For spectrogram add denoising (e.g., 60hz) and filtering options.
 - Add plot-shader.
-- Do I want data-scroller or not? Talk to Baca about this.
+- Do I want data-scroller or not?
 - For freqhist should I guarantee it sums to 1 even when bin widths don't match data limits? Probably not. Something to think about though.
 - In smoother, consider switching from filtfilt() to sosfiltfilt() for reasons laid out here: https://dsp.stackexchange.com/a/17255/51564
 - Convert notch filter to sos?
