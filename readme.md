@@ -21,19 +21,17 @@ Brief summary of utilities:
         - rand_rgb: returns random array of rgb values
 
 ## Install
-I will build a conda installer eventually. For now, using the anaconda prompt, just cd to the folder where you want the anaties folder placed, and:
+Plan is to build an installer eventually. For now, using the anaconda prompt, just cd to the folder where you want the anaties folder placed, and:
 
     git clone https://github.com/EricThomson/anaties
 
-To get it to work within any virtual environment, make sure you have the dependencies installed (scipy, numpy, matplotlib), and then you can import it with:
+This will download the package and place the anaties folder inside that folder. Then, to get it to work within any virtual environment, make sure you have the dependencies installed (scipy, numpy, matplotlib), and then you can import it with:
 
     sys.path.append(anaties_path)
     from anaties import signals as sig
     from anaties import helpers as helpy
 
-Where `anaties_path` is the path to the anaties folder where you cloned the package (e.g., 'x/y/z/anaties/')
-
-Later if you want to update the package, you can just do `git pull` from within `anaties_path`.
+Where `anaties_path` is the path to the anaties folder you downloaded (e.g., 'x/y/z/anaties/'). Later if you want to update the package, you can just do `git pull` from within `anaties_path`.
 
 
 ## Useful sources
