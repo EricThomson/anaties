@@ -23,12 +23,15 @@ def freqhist(data, bins, color = 'k'):
         color ('k'): color to paint bars
         
     Outputs:
-        draws frequency histogram such that all the binned data would sum to 1 
+        Draws frequency histogram such that all the binned data would sum to 1 
           Will only sum to 1 if bin edges contain full range of values
-        n: array of histogram bin values
+        n: array of values of the histogram in the bin edges
+        bin_edges: n+1 array of bin edges.
+        
     """
-    n, _, _ = plt.hist(data, bins, color = color, weights = np.ones(len(data))/len(data), density = False)
-    return n
+    n, bin_edges, _ = plt.hist(data, bins, color = color, 
+                       weights = np.ones(len(data))/len(data), density = False)
+    return n, bin_edges
 
 
 

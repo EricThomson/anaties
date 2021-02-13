@@ -62,9 +62,10 @@ For a discussion of the difference between relative and absolute tolerance value
 - Developed with the support of NIH Bioinformatics, and the Neurobehavioral Core at NIEHS.
 
 ## To do
+- Add plot-shade
+- Start a stats module that includes basic stats: mean_std() that returns mean and standard dev and mean_stderr (returns mean and std err of mean), standard error of the median, median equality test that also includes cramer's effect size for median test.
 - Replace fft with welch it is *way* better for getting power spectrum.
 - For specgrogram add denoising (e.g., 60hz) and filtering options.
-- Add plot-shader.
 - Do I want data-scroller or not? Talk to Baca about this.
 - For freqhist should I guarantee it sums to 1 even when bin widths don't match data limits? Probably not. Something to think about though.
 - In smoother, consider switching from filtfilt() to sosfiltfilt() for reasons laid out here: https://dsp.stackexchange.com/a/17255/51564
