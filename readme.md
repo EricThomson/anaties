@@ -12,6 +12,7 @@ Brief summary of utilities:
 
     plots.py (basic plotting wrappers)
         - freqhist: calculate/plot a relative frequency histogram
+        - rect_highlight: overlay rectangular highlight on current figure
 
     helpers.py (generic utility functions for use everywhere)
         - datetime_string : return date_time string to use for naming files etc
