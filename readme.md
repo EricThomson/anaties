@@ -12,10 +12,19 @@ Brief summary of utilities:
 
     plots.py (basic plotting wrappers)
         - freqhist: calculate/plot a relative frequency histogram
+        - paired_bar: bar plot for paired data
         - rect_highlight: overlay rectangular highlight on current figure
+
+    stats (basic descriptive stats)
+        - mn_sem: mean and std error of the mean for an array
+        - mn_std: mean and standard deviation of an array
+        - se_mean: std err of mean of array
+        - se_median: std error of median of array
+        - cramers_v: cramers v for effect size for chi-square test
 
     helpers.py (generic utility functions for use everywhere)
         - datetime_string : return date_time string to use for naming files etc
+        - get_bins: get bin edges and centers, given limits and bin width
         - get_offdiag_vals: get lower off-diagonal values of a symmetric matrix
         - ind_limits: return indices that contain array data within range
         - is_symmetric: check if 2d array is symmetric
@@ -31,6 +40,8 @@ This will download the package and place the anaties folder inside that folder. 
     sys.path.append(anaties_path)
     from anaties import signals as sig
     from anaties import helpers as helpy
+
+I usually import plots as `aplots` and stats as `aplots`.   
 
 Where `anaties_path` is the path to the anaties folder you downloaded (e.g., 'x/y/z/anaties/'). Later if you want to update the package, you can just do `git pull` from within `anaties_path`.
 
@@ -65,11 +76,8 @@ For a discussion of the difference between relative and absolute tolerance value
 - Developed with the support of NIH Bioinformatics, and the Neurobehavioral Core at NIEHS.
 
 ## To do
-- Add plot-shade
-- Start a stats module that includes basic stats: mean_std() that returns mean and standard dev and mean_stderr (returns mean and std err of mean), standard error of the median, median equality test that also includes cramer's effect size for median test.
 - Replace fft with welch it is *way* better for getting power spectrum.
 - For spectrogram add denoising (e.g., 60hz) and filtering options.
-- Add plot-shader.
 - Do I want data-scroller or not?
 - For freqhist should I guarantee it sums to 1 even when bin widths don't match data limits? Probably not. Something to think about though.
 - In smoother, consider switching from filtfilt() to sosfiltfilt() for reasons laid out here: https://dsp.stackexchange.com/a/17255/51564

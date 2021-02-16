@@ -4,12 +4,14 @@ Plotting functions for anaties package
 https://github.com/EricThomson/anaties
 """
 import sys
-from pathlib import Path
+from types import SimpleNamespace
 import matplotlib.pyplot as plt
 import numpy as np
+from pathlib import Path
 
 sys.path.append(str(Path('.').absolute().parent))
-
+import anaties.helpers as helpy
+import anaties.stats as astats
 
 def freqhist(data, bins, color = 'k'):
     """
@@ -37,6 +39,121 @@ def freqhist(data, bins, color = 'k'):
     n, bin_edges, _ = plt.hist(data, bins, color = color, 
                        weights = np.ones(len(data))/len(data), density = False)
     return n, bin_edges
+
+
+def paired_bar(xdata, ydata, xrange, xbin_width, axlabels = ['x', 'y'], plot_on = 1):
+    """
+    Create bar plot for paired x/y data, especially useful when x is a float.
+    
+    Given paired data (xdata, ydata), and desired range and bin-width
+    for xdata, show mean/sem of corresponding ydata. Optionally plots
+    bar plot of y mn/sem bins vs x and scatter plot of original data.
+       
+    Inputs:
+        xdata: 1d numpy array
+        ydata: 1d numpy array
+        xrange [min, max] min and max bounds for x data for binning
+        xbin_width (float): bin width you want for binning x data
+        plot_on (int): 0: no plots, 1 bar plot, 2 bar+scatter
+    
+    Outputs:
+        Returns simple object, bar_properties, a class with following attributes:
+            xbin_edges: array of bin edges formed from input params
+            xbin_centers: num_bins length array of bin centers between xbin_edges
+            ybinned_means: num_bins length array of mean value of ydata in points corresponding to binned xdata
+            ybinned_sems: num_bins length array of sem of ydata in points corresponding to binned xdata
+            ybinned_data: num_bins length list of array of y data in each bin corresponding to xbin_centers
+            num_samples: num_bins length list of number of points in each bin
+            axes: axes of plots if you are plotting, None if plot_on=0
+    
+    Example (weight vs height):
+        height_dat = np.asarray([60, 60.1, 59.2, 60.3, 60.4,
+                                 65, 65.1, 66.2, 65.3, 65.4,
+                                 70, 70.1, 70.2, 70.3, 70.4])  
+        weight_dat = np.asarray([120, 100, 140, 150, 90,
+                                 140, 120, 161, 170, 110,
+                                 160, 140, 180, 190, 130])
+        weight_bar = paired_bar(height_dat, weight_dat, 
+                                xrange = [57.5, 72.5], xbin_width = 5, plot_on = 2,
+                                axlabels = ['Height (inches)', 'Weight (lbs)'])  
+        weight_bar.axes[1].set_ylim(100, 180);
+        weight_bar.axes[0].set_ylim(75, 205)
+        weight_bar.axes[0].set_xlim(58.5,71.5)
+        weight_bar.axes[1].set_xticks([60, 65, 70]);
+                         
+    Note:
+        For categorical x data, plt.bar() is often fine. 
+        This is for more complex cases where you don't feel 
+        like setting up bin edges beforehand.    
+    """
+    if xdata.size != ydata.size:
+        raise ValueError('xdata and ydata are paired data: they must be the same size')
+        
+    xbin_edges, xbin_centers = helpy.get_bins(xrange[0], xrange[1], bin_width = xbin_width)
+    num_bins = len(xbin_centers)
+    # for each element of xdata, get its bin number between 1...num_bins
+    xdata_inds = np.digitize(xdata, xbin_edges, right = True) 
+    
+    # use those some indices to extract values from ydata and insert into bins
+    ybinned_means = []
+    ybinned_sems = []
+    ybinned_data = []
+    num_samples = []
+    for bin_num in range(num_bins):
+        current_ydata = ydata[xdata_inds == bin_num+1]
+        num_samples_bin = len(current_ydata)
+        num_samples.append(num_samples_bin)
+        ybinned_data.append(current_ydata)
+        if num_samples_bin > 0:
+            y_mn, y_sem = astats.mn_sem(current_ydata)
+        else:
+            y_mn = np.nan
+            y_sem = np.nan
+        ybinned_means.append(y_mn)
+        ybinned_sems.append(y_sem)
+    ybinned_means = np.asarray(ybinned_means)
+    ybinned_sems = np.asarray(ybinned_sems)
+        
+    if plot_on == 1:
+        f, ax = plt.subplots()
+        ax.bar(xbin_centers, ybinned_means, 
+                width = 0.94*xbin_width, 
+                yerr = ybinned_sems, 
+                color = 'k',
+                zorder = 3);
+        ax.set_xlabel(axlabels[0])
+        ax.set_ylabel(axlabels[1])
+    elif plot_on == 2:
+        f, (ax1, ax2) = plt.subplots(2,1)
+        ax1.scatter(xdata, ydata, color = 'k')
+        ax1.set_xlabel(axlabels[0])
+        ax1.set_ylabel(axlabels[1])
+        
+        ax2.bar(xbin_centers, ybinned_means, 
+                width = 0.94*xbin_width, 
+                yerr = ybinned_sems, 
+                color = 'k',
+                zorder = 3);
+        ax2.set_xlabel(axlabels[0])
+        ax2.set_ylabel(axlabels[1])
+        plt.tight_layout()
+
+    #create simple namespace to contain all the bits to return:
+    bar_properties = SimpleNamespace()
+    bar_properties.xbin_edges = xbin_edges
+    bar_properties.xbin_centers = xbin_centers
+    bar_properties.ybinned_means = ybinned_means
+    bar_properties.ybinned_sems = ybinned_sems
+    bar_properties.ybinned_data = ybinned_data
+    bar_properties.num_samples = num_samples #number of samples in each bin
+    if plot_on == 0:
+        bar_properties.axes = None
+    elif plot_on == 1:
+        bar_properties.axes = (ax,)
+    elif plot_on == 2:
+        bar_properties.axes = (ax1, ax2)
+        
+    return bar_properties 
 
 
 def rect_highlight(shade_range, orientation = 'vert', color = (1,1,0), alpha = 0.3):
@@ -90,12 +207,36 @@ if __name__ == '__main__':
     bins = [0, 0.5, 1, 1.5, 2]
     n = freqhist(data, bins, color = 'g')
     plt.grid(axis = 'y')
+    plt.xlabel('Incindiery Intensity')
+    plt.ylabel('relative frequency')
+    plt.gcf().canvas.set_window_title("Testing freqhist()")
+    
+    
+    """
+    Test paired_bar
+    """
+    print("anaties.plots: testing paired_bar()...")
+    height_dat = np.asarray([60, 60.1, 59.2, 60.3, 60.4,
+                             65, 65.1, 66.2, 65.3, 65.4,
+                             70, 70.1, 70.2, 70.3, 70.4])  
+    weight_dat = np.asarray([120, 100, 140, 150, 90,
+                             140, 120, 161, 170, 110,
+                             160, 140, 180, 190, 130])
+    weight_bar = paired_bar(height_dat, weight_dat, 
+                            xrange = [57.5, 72.5], xbin_width = 5, plot_on = 1,
+                            axlabels = ['Height (inches)', 'Weight (lbs)'])  
+    plt.ylim(75, 205)
+    plt.xlim(57.5,72.5)
+    plt.xticks([60, 65, 70])
+    plt.gcf().canvas.set_window_title("Testing paired_bar()")
+
+    
     
     """
     Test rect_highlight
     """
     print("anaties.plots: testing rect_highlight()...")
-    plt.figure('Testing Highlighter')
+    plt.figure('Testing rect_highlight()')
     xdat = np.linspace(0.0, 100, 1000)
     ydat = np.sin(0.1*xdat)+np.random.normal(scale=0.1,size=xdat.shape)
     plt.plot(xdat, ydat, color = 'black', linewidth = 0.5)

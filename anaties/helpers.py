@@ -25,6 +25,32 @@ def datetime_string():
     return datetime.datetime.now().strftime("_%Y%m%d_%H%M%S")
 
 
+def get_bins(min_edge, max_edge, bin_width = 1):
+    """
+    return array of bin edges/centers 
+    
+    Inputs:
+        min_edge: scalar lower bound
+        max_edge: scalar upper bound
+        bin_width: scalar bin width to divide up the range
+        
+    Outputs:
+        bin_edges: 
+        bin_centers
+    
+    Example:
+        bin_edges, bin_centers = get_bins(0, 20, bin_width = 5)
+    """
+
+    remainder = np.mod(max_edge-min_edge, bin_width)
+    if remainder != 0:
+        print("get_bins: Warning bin_width may not exactly divide up the given range of values.")
+    
+    bin_edges = np.arange(min_edge, max_edge+bin_width, bin_width)
+    bin_centers = np.arange(min_edge+bin_width/2, max_edge+bin_width/2, bin_width)
+    return bin_edges, bin_centers 
+
+
 def get_offdiag_vals(array):
     """
     For a symmetric array of values, pull the lower diagonal values 
@@ -125,6 +151,15 @@ if __name__ == '__main__':
     print(f"string generated: {datetime_string()}")
     
     
+    
+    """
+    Test get_offdiag_vals()
+    """
+    print("\nanaties.helpers: testing get_bins()...")
+    bin_edges, bin_centers = get_bins(0, 20, bin_width = 5)
+    print("Bin edges/centers for min/max/width 0, 5, 20:")
+    print(f"{bin_edges}\n{bin_centers}")
+    
     """
     Test get_offdiag_vals()
     """
@@ -148,7 +183,7 @@ if __name__ == '__main__':
     dat_lims = [2.5, 7]
     lim_inds = ind_limits(foo_array, data_limits = dat_lims)
     assert lim_inds == (2, 6), print("ind_limits fail")
-    print(f"\tinds containing {dat_lims} within {foo_array}: {lim_inds}")
+    print(f"inds containing {dat_lims} within {foo_array}:\n{lim_inds}")
     
 
     """
@@ -165,7 +200,7 @@ if __name__ == '__main__':
 
 
     """
-    test get_rgb
+    test rand_rgb
     """
     print("\nanaties.helpers: testing rand_rgb()...")
     print("Generating a plot...")
