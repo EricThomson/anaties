@@ -5,6 +5,7 @@ Brief summary of utilities:
 
     signals.py (for 1d data arrays like voltage, sound, etc)
         - smooth: smooth a signal with a window (gaussian, etc)
+        - smooth_rows: smooth each row of a 2d array using smooth()
         - fft: get fft and power spectrum of a signal
         - spectrogram: calculate/plot spectrogram of a signal
         - notch_filter: notch filter to attenuate specific frequency (e.g. 60hz)

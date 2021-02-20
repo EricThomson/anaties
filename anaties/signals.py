@@ -75,32 +75,27 @@ def smooth(data, window_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1
 
 def smooth_rows(data, window_type = 'hann', filter_width = 11, sigma = 2):
     """ 
-    Smooth each row of a 2d array: uses smooth() 
+    Smooth each row of a 2d array: uses smooth() see that for more details
+    for the params.
         
     Inputs:
-        data: nxm numpy array
+        data: nxm numpy array (n=num signals, m = num dimensions)
         window_type ('hanning'): string ('boxcar', 'gaussian', 'hanning', 'bartlett', 'blackman')
         filter_width (11): int (wider is more smooth) odd is ideal
         sigma (2.): scalar std deviation only used for gaussian window
-        plot_on (1): int determines plotting. 0 none, 1 plot signal, 2: also plot filter
     Outputs
-        data_smoothed: signal after being smoothed (nxm 2d array)
-        filter_window: the window used for smoothing
-        
-    Notes: 
-        Calls 'smooth()' and applies to each row of data array
-        Uses gustaffson's method to handle edge artifacts
-        Currently accepted window_type options:
-            hann (default) - cosine bump filter_width is only param
-            blackman - more narrowly peaked bump than hann
-            boxcar - flat-top of length filter_width
-            bartlett - triangle
-            gaussian - sigma determines width
+        data_smoothed: nxm array after being smoothed (nxm 2d array)
     """
     nrows, ncols = data.shape
-    #maybe use apply_along_axis and some clever use of lambda here? or just a loop?
-    print("not implemented")
-    return
+    data_smoothed = []
+    for row in range(nrows):
+        smoothed_row, _ = smooth(data[row,:],
+                                 window_type = window_type, 
+                                 filter_width = filter_width,
+                                 sigma = sigma,
+                                 plot_on = False)
+        data_smoothed.append(smoothed_row)
+    return np.asarray(data_smoothed)
 
 
 def fft(data, sampling_period, include_neg = False, view_range = None, plot_on = 1):
@@ -350,6 +345,26 @@ if __name__ == '__main__':
     plt.title(f'signals.smooth test with {window} filter')
     plt.show()
 
+
+    """
+    Test smooth_rows()
+    """
+    print("anaties.signals: testing smooth_rows()")
+    noisy_array = [pure_signal+np.random.normal(scale=std, size = t.shape),
+                   pure_signal+2+np.random.normal(scale=std, size = t.shape),
+                   pure_signal-2+np.random.normal(scale=std, size = t.shape)]
+    noisy_array = np.asarray(noisy_array)
+    smoothed_array = smooth_rows(noisy_array, 
+                                 window_type = 'gaussian', 
+                                 sigma = 3, 
+                                 filter_width = 21)
+    plt.figure("smooth_rows()")
+    plt.plot(noisy_array.T, linewidth = 0.5, color = (0.5, 0.5, 0.5))
+    plt.plot(smoothed_array.T, linewidth = 1, color = 'k')
+    plt.autoscale(enable=True, axis='x', tight=True)
+    plt.title('signals.smoothed_rows test')
+    plt.show()
+    
 
     """
     Test fft
