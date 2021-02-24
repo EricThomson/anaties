@@ -9,28 +9,28 @@ import numpy as np
 
 
 
-def mn_sem(array):
+def mn_sem(array, axis = None):
     """
-    return mean and std error of mean of 1d numpy array
+    return mean and std error of mean of a numpy array
     """
-    return np.mean(array), se_mean(array)
+    return np.mean(array, axis = axis), se_mean(array, axis = axis)
 
 
-def mn_std(array):
+def mn_std(array, axis = None):
     """
     return mean and std deviation of 1d array of data
     """
-    return np.mean(array), np.std(array)
+    return np.mean(array, axis = axis), np.std(array)
 
 
-def se_mean(array):
+def se_mean(array, axis = None):
     """
     calculate std error of mean of 1d numpy array 
     """
     return np.std(array)/np.sqrt(len(array))
 
 
-def se_median(array):
+def se_median(array, axis = None):
     """
     Calculate standard error of the median of 1d numpy array
     Uses the approximation 1.253*std_err_mean

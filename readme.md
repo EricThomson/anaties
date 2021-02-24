@@ -17,7 +17,7 @@ Brief summary of utilities:
         - rect_highlight: overlay rectangular highlight on current figure
 
     stats (basic descriptive stats)
-        - mn_sem: mean and std error of the mean for an array
+        - mn_sem: mean and std error of the mean of an array
         - mn_std: mean and standard deviation of an array
         - se_mean: std err of mean of array
         - se_median: std error of median of array
@@ -77,6 +77,7 @@ For a discussion of the difference between relative and absolute tolerance value
 - Developed with the support of NIH Bioinformatics, and the Neurobehavioral Core at NIEHS.
 
 ## To do
+- mn_sem should work on 2d array if you give it an axis.
 - Replace fft with welch it is *way* better for getting power spectrum.
 - For spectrogram add denoising (e.g., 60hz) and filtering options.
 - Do I want data-scroller or not?
