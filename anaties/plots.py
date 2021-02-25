@@ -156,6 +156,33 @@ def paired_bar(xdata, ydata, xrange, xbin_width, axlabels = ['x', 'y'], plot_on 
     return bar_properties 
 
 
+def plot_with_events(x, y, linewidth = 0.5, color = 'black', all_events = None, event_colors = None):
+    """
+    Plot a signal and events...in technicolor!
+    
+    Inputs:
+        x: array for x axis of plot
+        y: array for y axis of plot
+        linewidth for plot (0.5)
+        color for plot line (black)
+        all_events: list of arrays (None)
+        event_colors: list of colors (None)
+    Output:
+        axis object so you can have fun
+    
+    To do:
+        Add exmaple
+    """
+    f, ax = plt.subplots()
+    if event_colors is not None:
+        for event_ind, events in enumerate(all_events):
+            for event in events:
+                ax.axvline(event, color=event_colors[event_ind], linewidth = 1)
+    ax.plot(x, y, linewidth = linewidth, color = color)
+    ax.autoscale(enable=True, axis='x', tight=True)
+    return ax
+
+
 def rect_highlight(shade_range, orientation = 'vert', color = (1,1,0), alpha = 0.3):
     '''
     overlay transluscent highlight over current figure 
@@ -230,7 +257,17 @@ if __name__ == '__main__':
     plt.xticks([60, 65, 70])
     plt.gcf().canvas.set_window_title("Testing paired_bar()")
 
-    
+    """
+    Test plot_with_events
+    """
+    print("anaties.plots: testing plot_with_events()...")
+    x = np.linspace(0, 20, 100)
+    y = np.sin(x) + np.random.normal(scale = 0.2, size=x.shape)
+    sounds = [5, 10, 15]
+    lights = [7, 12, 17]
+    ax = plot_with_events(x, y, all_events = [sounds, lights], event_colors = ['red', 'green'])
+    plt.show()
+    plt.gcf().canvas.set_window_title("Testing plot_with_events()")
     
     """
     Test rect_highlight

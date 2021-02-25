@@ -14,6 +14,7 @@ Brief summary of utilities:
     plots.py (basic plotting wrappers)
         - freqhist: calculate/plot a relative frequency histogram
         - paired_bar: bar plot for paired data
+        - plot_with_events: plot with vertical lines to indicate events
         - rect_highlight: overlay rectangular highlight on current figure
 
     stats (basic descriptive stats)
@@ -77,9 +78,9 @@ For a discussion of the difference between relative and absolute tolerance value
 - Developed with the support of NIH Bioinformatics, and the Neurobehavioral Core at NIEHS.
 
 ## To do
-- mn_sem should work on 2d array if you give it an axis.
 - Replace fft with welch it is *way* better for getting power spectrum.
 - For spectrogram add denoising (e.g., 60hz) and filtering options.
+- add ax return for plot functions, when possible.
 - Do I want data-scroller or not?
 - For freqhist should I guarantee it sums to 1 even when bin widths don't match data limits? Probably not. Something to think about though.
 - In smoother, consider switching from filtfilt() to sosfiltfilt() for reasons laid out here: https://dsp.stackexchange.com/a/17255/51564
