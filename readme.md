@@ -43,7 +43,7 @@ This will download the package and place the anaties folder inside that folder. 
     from anaties import signals as sig
     from anaties import helpers as helpy
 
-I usually import plots as `aplots` and stats as `aplots`.   
+I usually import plots as `aplots` and stats as `astats`.   
 
 Where `anaties_path` is the path to the anaties folder you downloaded (e.g., 'x/y/z/anaties/'). Later if you want to update the package, you can just do `git pull origin master` from within `anaties_path`.
 
