@@ -180,6 +180,7 @@ def plot_with_events(x, y, linewidth = 0.5, color = 'black', all_events = None, 
                 ax.axvline(event, color=event_colors[event_ind], linewidth = 1)
     ax.plot(x, y, linewidth = linewidth, color = color)
     ax.autoscale(enable=True, axis='x', tight=True)
+    plt.get_current_fig_manager().show()  #brings window to front
     return ax
 
 
