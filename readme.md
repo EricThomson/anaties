@@ -3,7 +3,7 @@ An analysis utilities package. Common operations like signal smoothing that I fi
 
 Brief summary of utilities:  
 
-    signals.py (for 1d data arrays like voltage, sound, etc)
+    signals.py (for 1d data arrays, or arrays of such arrays)
         - smooth: smooth a signal with a window (gaussian, etc)
         - smooth_rows: smooth each row of a 2d array using smooth()
         - fft: get fft and power spectrum of a signal
@@ -17,7 +17,8 @@ Brief summary of utilities:
         - plot_with_events: plot with vertical lines to indicate events
         - rect_highlight: overlay rectangular highlight on current figure
 
-    stats (basic descriptive stats)
+    stats (basic statistical things)
+        - med_semed: median and std error of median of an array
         - mn_sem: mean and std error of the mean of an array
         - mn_std: mean and standard deviation of an array
         - se_mean: std err of mean of array
@@ -80,7 +81,7 @@ For a discussion of the difference between relative and absolute tolerance value
 ## To do
 - Replace fft with welch it is *way* better for getting power spectrum.
 - add ax return for plot functions, when possible.
-- Do I want data-scroller or not?
+- add tests to stats module.
 - For freqhist should I guarantee it sums to 1 even when bin widths don't match data limits? Probably not. Something to think about though.
 - In smoother, consider switching from filtfilt() to sosfiltfilt() for reasons laid out here: https://dsp.stackexchange.com/a/17255/51564
 - Convert notch filter to sos?
@@ -92,4 +93,5 @@ https://pyspectrum.readthedocs.io/en/latest/
 - Add audio playback of signals (see notes in audio_playback_workspace), incorporate this into some tests of filtering, etc.. simpleaudio package is too simple I think.
 - Add numerical tests with random seed set not just graphical eyeball tests.
 - Long-term: autodocs (sphinx?)
-- Long-term: Make audio player that shows location in waveform for spectrogram. This is actually a lot trickier than you might think -- you have notes on this in `background/`
+- Long-term: Make audio player that shows location in waveform for spectrogram. This is more tricky than you might think. There are notes on it in background/.
+- Do I want data-scroller or not? Would prefer something better, maybe something like in pyqtgraph.

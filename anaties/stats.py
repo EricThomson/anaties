@@ -18,9 +18,16 @@ def mn_sem(array, axis = None):
 
 def mn_std(array, axis = None):
     """
-    return mean and std deviation of 1d array of data
+    return mean and std deviation of numpy array 
     """
     return np.mean(array, axis = axis), np.std(array)
+
+
+def med_semed(array, axis = None):
+    """ 
+    return median and std error of the median or numpy array
+    """
+    return np.median(array, axis = None), se_median(array, axis = None)
 
 
 def se_mean(array, axis = None):
@@ -38,7 +45,7 @@ def se_median(array, axis = None):
     Adapted from:
     https://stats.stackexchange.com/a/196666/17624    
     """
-    return 1.2533*se_mean(array)
+    return 1.2533*se_mean(array, axis = axis)
 
 
 def cramers_v(test_stat, n, df):
@@ -57,3 +64,8 @@ def cramers_v(test_stat, n, df):
     https://www.real-statistics.com/chi-square-and-f-distributions/effect-size-chi-square/
     """
     return np.sqrt(test_stat/(n*df))
+
+
+
+if __name__ == '__main__':
+    print("no tests written for anaties.stats yet. come on brah")
