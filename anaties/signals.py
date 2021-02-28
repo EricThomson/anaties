@@ -252,6 +252,7 @@ def spectrogram(data,
                 view_range = None,
                 all_events = None,
                 colormap = 'inferno',
+                notch_frequency = None,
                 plot_on = 0):
     """ 
     Get/plot spectrogram of signal
@@ -266,12 +267,14 @@ def spectrogram(data,
         view_range (2-elt array-like): low and high frequencies used only for plotting (None)
         all_events (list of lists): times to show vertical bands for events, used for plotting
         colormap (string): colormap (inferno) (see also gist_heat, twilight_shifted, jet, ocean, bone)
+        notch_frequency (float): if you want to filter out a frequency first (None)
         plot_on (int): 0 for no plotting, 1 to plot signal/spectrogram (0)
     
     Outputs:
         spectrogram (num_freqs x num_time_points)
         freqs (array of frequencies): from `sampling_rate/segment_length` up to `sampling_rate/2`
         time_bins (time bin centers): can control resolution w/segment_overlap. DeltaT = (segment_length-segment_overlap)/sampling_freq
+        axs: axes (None if plot_on is 0)
 
     Notes:
         - To plot use pcolormesh and 10*log10(spectrogram) otherwise it will look weird.
@@ -286,6 +289,12 @@ def spectrogram(data,
     if data.ndim > 1:
         data = data.flatten()
         
+    if notch_frequency is not None:
+        data, _, _ = notch_filter(data, 
+                                  notch_frequency,
+                                  sampling_rate,
+                                  plot_on = 0);
+            
     freqs, time_bins, spect = signal.spectrogram(data, 
                                                  fs = sampling_rate,
                                                  nperseg = segment_length,
@@ -316,8 +325,10 @@ def spectrogram(data,
                     axs[0].axvline(x = event, zorder = 3, color = 'k', linewidth = 0.5)
                     axs[1].axvline(x = event, zorder = 3, color = 'k', linewidth = 0.5)
         plt.tight_layout()
+    else:
+        axs = None
 
-    return spect, freqs, time_bins
+    return spect, freqs, time_bins, axs
 
 
 
@@ -399,7 +410,7 @@ if __name__ == '__main__':
     segment_overlap = segment_length//2
     event1 = [1.86, 5.3]
     event2 = [2.86, 6.3]
-    spect, spect_freqs, spect_time_bins = spectrogram(data, 
+    spect, spect_freqs, spect_time_bins, axs = spectrogram(data, 
                                                       sample_rate, 
                                                       segment_length = 1024, 
                                                       segment_overlap = 512, 

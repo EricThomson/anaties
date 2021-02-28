@@ -180,7 +180,7 @@ def plot_with_events(x, y, linewidth = 0.5, color = 'black', all_events = None, 
                 ax.axvline(event, color=event_colors[event_ind], linewidth = 1)
     ax.plot(x, y, linewidth = linewidth, color = color)
     ax.autoscale(enable=True, axis='x', tight=True)
-    plt.get_current_fig_manager().show()  #brings window to front
+    plt.get_current_fig_manager().show()  #brings window to front (not sure this works)
     return ax
 
 
@@ -267,7 +267,6 @@ if __name__ == '__main__':
     sounds = [5, 10, 15]
     lights = [7, 12, 17]
     ax = plot_with_events(x, y, all_events = [sounds, lights], event_colors = ['red', 'green'])
-    plt.show()
     plt.gcf().canvas.set_window_title("Testing plot_with_events()")
     
     """
@@ -282,6 +281,7 @@ if __name__ == '__main__':
     rect_highlight([35,55], orientation = 'vert', color = (1,1,0), alpha = 0.8)
     plt.grid()
 
+    plt.show()
     
     
     

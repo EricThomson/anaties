@@ -79,7 +79,6 @@ For a discussion of the difference between relative and absolute tolerance value
 
 ## To do
 - Replace fft with welch it is *way* better for getting power spectrum.
-- For spectrogram add denoising (e.g., 60hz) and filtering options.
 - add ax return for plot functions, when possible.
 - Do I want data-scroller or not?
 - For freqhist should I guarantee it sums to 1 even when bin widths don't match data limits? Probably not. Something to think about though.
@@ -88,10 +87,9 @@ For a discussion of the difference between relative and absolute tolerance value
 - Make power spectrume stimation better than fft ffs (at *least* use welch):
 https://github.com/cokelaer/spectrum
 https://pyspectrum.readthedocs.io/en/latest/
-- Add threshold to spectrogram plot?
 - add ability to control event colors in spectrogram.
 - ind_limits: add checks for data, data_limits, clarify description and docs
 - Add audio playback of signals (see notes in audio_playback_workspace), incorporate this into some tests of filtering, etc.. simpleaudio package is too simple I think.
 - Add numerical tests with random seed set not just graphical eyeball tests.
 - Long-term: autodocs (sphinx?)
-- Long-term: Make audio player that shows location in waveform for spectrogram.
+- Long-term: Make audio player that shows location in waveform for spectrogram. This is actually a lot trickier than you might think -- you have notes on this in `background/`

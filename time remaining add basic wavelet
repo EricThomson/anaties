@@ -1,0 +1,61 @@
+[1mdiff --git a/anaties/signals.py b/anaties/signals.py[m
+[1mindex 693754f..4b818ff 100644[m
+[1m--- a/anaties/signals.py[m
+[1m+++ b/anaties/signals.py[m
+[36m@@ -252,6 +252,7 @@[m [mdef spectrogram(data,[m
+                 view_range = None,[m
+                 all_events = None,[m
+                 colormap = 'inferno',[m
+[32m+[m[32m                notch_frequency = None,[m
+                 plot_on = 0):[m
+     """ [m
+     Get/plot spectrogram of signal[m
+[36m@@ -266,12 +267,14 @@[m [mdef spectrogram(data,[m
+         view_range (2-elt array-like): low and high frequencies used only for plotting (None)[m
+         all_events (list of lists): times to show vertical bands for events, used for plotting[m
+         colormap (string): colormap (inferno) (see also gist_heat, twilight_shifted, jet, ocean, bone)[m
+[32m+[m[32m        notch_frequency (float): if you want to filter out a frequency first (None)[m
+         plot_on (int): 0 for no plotting, 1 to plot signal/spectrogram (0)[m
+     [m
+     Outputs:[m
+         spectrogram (num_freqs x num_time_points)[m
+         freqs (array of frequencies): from `sampling_rate/segment_length` up to `sampling_rate/2`[m
+         time_bins (time bin centers): can control resolution w/segment_overlap. DeltaT = (segment_length-segment_overlap)/sampling_freq[m
+[32m+[m[32m        axs: axes (None if plot_on is 0)[m
+ [m
+     Notes:[m
+         - To plot use pcolormesh and 10*log10(spectrogram) otherwise it will look weird.[m
+[36m@@ -286,6 +289,12 @@[m [mdef spectrogram(data,[m
+     if data.ndim > 1:[m
+         data = data.flatten()[m
+         [m
+[32m+[m[32m    if notch_frequency is not None:[m
+[32m+[m[32m        data, _, _ = notch_filter(data,[m[41m [m
+[32m+[m[32m                                  notch_frequency,[m
+[32m+[m[32m                                  sampling_rate,[m
+[32m+[m[32m                                  plot_on = 0);[m
+[32m+[m[41m            [m
+     freqs, time_bins, spect = signal.spectrogram(data, [m
+                                                  fs = sampling_rate,[m
+                                                  nperseg = segment_length,[m
+[36m@@ -316,8 +325,10 @@[m [mdef spectrogram(data,[m
+                     axs[0].axvline(x = event, zorder = 3, color = 'k', linewidth = 0.5)[m
+                     axs[1].axvline(x = event, zorder = 3, color = 'k', linewidth = 0.5)[m
+         plt.tight_layout()[m
+[32m+[m[32m    else:[m
+[32m+[m[32m        axs = None[m
+ [m
+[31m-    return spect, freqs, time_bins[m
+[32m+[m[32m    return spect, freqs, time_bins, axs[m
+ [m
+ [m
+ [m
+[36m@@ -399,7 +410,7 @@[m [mif __name__ == '__main__':[m
+     segment_overlap = segment_length//2[m
+     event1 = [1.86, 5.3][m
+     event2 = [2.86, 6.3][m
+[31m-    spect, spect_freqs, spect_time_bins = spectrogram(data, [m
+[32m+[m[32m    spect, spect_freqs, spect_time_bins, axs = spectrogram(data,[m[41m [m
+                                                       sample_rate, [m
+                                                       segment_length = 1024, [m
+                                                       segment_overlap = 512, [m
