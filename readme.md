@@ -6,7 +6,7 @@ Brief summary of utilities:
     signals.py (for 1d data arrays, or arrays of such arrays)
         - smooth: smooth a signal with a window (gaussian, etc)
         - smooth_rows: smooth each row of a 2d array using smooth()
-        - fft: get fft and power spectrum of a signal
+        - power_spec: get the power spectral density or power spectrum
         - spectrogram: calculate/plot spectrogram of a signal
         - notch_filter: notch filter to attenuate specific frequency (e.g. 60hz)
         - bandpass_filter: allow through frequencies within low- and high-cutoff
@@ -54,24 +54,12 @@ Where `anaties_path` is the path to the anaties folder you downloaded (e.g., 'x/
 - https://scipy-cookbook.readthedocs.io/items/FiltFilt.html
 - https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html
 
-### FFT (this needs to be replaced with Welch)
-- https://ipython-books.github.io/101-analyzing-the-frequency-components-of-a-signal-with-a-fast-fourier-transform/
-- https://scipy-lectures.org/intro/scipy/auto_examples/plot_fftpack.html#sphx-glr-intro-scipy-auto-examples-plot-fftpack-py
-
-
 ## Notes
-### Notes on FFT
-Replace PSD with the spectrum package, or at least Welch's method:
-https://pyspectrum.readthedocs.io/en/latest/
-
-### Edge artifacts
-Handling edge artifacts can be tricky: currently I use Gustaffson's method as the default, though at some point might tinker with that -- there are many options.
-
 ### What about wavelets?
 I may add wavelets at some point, but it isn't plug-and-play enough for this repo. If you want to get started with wavelets in Python, I recommend http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/
 
 ### Tolerance values
-For a discussion of the difference between relative and absolute tolerance values when testing floats for equality, for instance as used in `helpers.is_symmetric()`, see:
+For a discussion of the difference between relative and absolute tolerance values when testing floats for equality (for instance as used in `helpers.is_symmetric()`) see:
  https://stackoverflow.com/questions/65909842/what-is-rtol-for-in-numpys-allclose-function
 
 ## Acknowledgments
@@ -79,7 +67,6 @@ For a discussion of the difference between relative and absolute tolerance value
 - Developed with the support of NIH Bioinformatics, and the Neurobehavioral Core at NIEHS.
 
 ## To do
-- Replace fft with welch it is *way* better for getting power spectrum.
 - add ax return for plot functions, when possible.
 - add tests to stats module.
 - For freqhist should I guarantee it sums to 1 even when bin widths don't match data limits? Probably not. Something to think about though.

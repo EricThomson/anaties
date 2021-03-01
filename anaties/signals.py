@@ -9,7 +9,8 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt 
 from scipy import signal
-import scipy.fftpack as fftpack
+# import scipy.fftpack as fftpack #not used
+from scipy.signal import welch
 import scipy.signal.windows as windows
 from scipy.io import wavfile
 
@@ -98,52 +99,60 @@ def smooth_rows(data, window_type = 'hann', filter_width = 11, sigma = 2):
     return np.asarray(data_smoothed)
 
 
-def fft(data, sampling_period, include_neg = False, view_range = None, plot_on = 1):
+def power_spec(data, 
+               sampling_frequency, 
+               segment_length = 1024,
+               segment_overlap = 512,
+               window = 'hann',
+               view_range = None, 
+               scaling = 'density',
+               plot_on = 0):
     """ 
-    Calculates fft, and power spectrum, of 1d data
-    Wrapper for scipy.fftpack.fft
+    Calculates power spectral density (default), or power spectrum, of signal
+    using Welch's method. 
+    Wrapper for scipy.signal.welch
     
     Inputs:
         data: numpy array
-        sampling_period (float): time between samples
-        include_neg (bool): include negative frequencies in result
+        sampling_frequency (float): frequency (Hz) at which signals were sampled
+        segment_length (int): number of samples per segment in which to calculate STFFT (1024)
+        segment_overlap (int): overlap samples between segments (512) (must be less than segment_length)
+        window (string): type of window to apply to each segment to make it periodic ('hann')
         view_range (2-elt array-like): low and high frequencies used only for plotting (None)
-        plot_on (int): determines plotting (0 no, 1 yes)
-        
+        scaling (str): 'density' for power spectral density, 'spectrum' for power spectrum ('density')
+        plot_on (int): 0 for no plotting, 1 to plot spectrum (0)
+
     Outputs:
-        data_fft: the full fft from fftpack
-        power_spectrum: the amplitude squared at each frequency
-        frequencies: corresponding frequencies of power spectrum 
-           from samp_freq/num_points up to samp_freq/2, in increments of samp_freq/num_points
-           so to increase resolution increase frequency or number of points
-    
-    Adapted from:
-        https://ipython-books.github.io/101-analyzing-the-frequency-components-of-a-signal-with-a-fast-fourier-transform/
+        ps: the power spectral density, or power spectrum of the signal
+        frequencies: frequencies of spectrum 
+        
+    Note:
+        Frequencies range from sampling_frequency/num_points up to sampling_frequency/2, 
+        in increments of sampling_frequency/num_points. 
     """
-    data_dc = data - np.mean(data)  # remove dc component so it doesn't spill over
-    data_fft = fftpack.fft(data_dc)
-    power_spectrum = np.abs(data_fft)**2
-    # returns frequencies given signal length and sampling period
-    frequencies = fftpack.fftfreq(len(power_spectrum), sampling_period)
+
+    frequencies, ps = welch(data.reshape(-1,),
+                            fs=sampling_frequency,  # sample rate
+                            window='hann',  
+                            nperseg=segment_length,        
+                            noverlap=segment_overlap,
+                            detrend='constant', 
+                            average = 'mean',  #other option is 'median'
+                            scaling = scaling)
     
-    if not include_neg:
-        pos_inds = frequencies > 0
-        frequencies = frequencies[pos_inds]
-        power_spectrum = power_spectrum[pos_inds]
     
     if plot_on:
         first_ind, last_ind = helpy.ind_limits(frequencies, view_range) 
-        plt.figure('power')
-        plt.plot(frequencies[first_ind: last_ind], 
-                 power_spectrum[first_ind: last_ind], 
+        plt.figure()
+        plt.semilogy(frequencies[first_ind: last_ind], 
+                 ps[first_ind: last_ind], 
                  color = (0.4, 0.4, 0.4),
                  linewidth = 0.75)
-        plt.yscale('log')
         plt.autoscale(enable=True, axis='x', tight=True)
         plt.xlabel('Frequency')
         plt.ylabel('log(Power)')
         
-    return data_fft, power_spectrum, frequencies
+    return ps, frequencies
 
 
 def bandpass_filter(data, lowcut, highcut, sampling_frequency, order=5, plot_on = 0):
@@ -245,7 +254,7 @@ def notch_filter(data, notch_frequency, sampling_frequency, quality_factor = 35.
 
 
 def spectrogram(data, 
-                sampling_rate, 
+                sampling_frequency, 
                 segment_length = 1024, 
                 segment_overlap = 512, 
                 window = 'hann', 
@@ -253,14 +262,15 @@ def spectrogram(data,
                 all_events = None,
                 colormap = 'inferno',
                 notch_frequency = None,
-                plot_on = 0):
+                plot_on = 0,
+                scaling = 'density'):
     """ 
     Get/plot spectrogram of signal
     Wrapper for scipy.spectrogram
     
     Inputs:
         data: numpy array
-        sampling_freq (float): sampling rate (Hz)
+        sampling_frequency (float): frequency (Hz) at which samples were acquired
         segment_length (int): number of samples per segment in which to calculate STFFT (1024)
         segment_overlap (int): overlap samples between segments (512) (must be less than segment_length)
         window (string): type of window to apply to each segment to make it periodic
@@ -269,10 +279,11 @@ def spectrogram(data,
         colormap (string): colormap (inferno) (see also gist_heat, twilight_shifted, jet, ocean, bone)
         notch_frequency (float): if you want to filter out a frequency first (None)
         plot_on (int): 0 for no plotting, 1 to plot signal/spectrogram (0)
+        scaling (str): 'density' for power spectral density, 'spectrum' for power spectrum ('density')
     
     Outputs:
-        spectrogram (num_freqs x num_time_points)
-        freqs (array of frequencies): from `sampling_rate/segment_length` up to `sampling_rate/2`
+        spectrogram (num_freqs x num_time_points) power spectral density over time
+        freqs (array of frequencies): from `sampling_frequency/segment_length` up to `sampling_frequency/2`
         time_bins (time bin centers): can control resolution w/segment_overlap. DeltaT = (segment_length-segment_overlap)/sampling_freq
         axs: axes (None if plot_on is 0)
 
@@ -292,18 +303,19 @@ def spectrogram(data,
     if notch_frequency is not None:
         data, _, _ = notch_filter(data, 
                                   notch_frequency,
-                                  sampling_rate,
+                                  sampling_frequency,
                                   plot_on = 0);
             
     freqs, time_bins, spect = signal.spectrogram(data, 
-                                                 fs = sampling_rate,
+                                                 fs = sampling_frequency,
                                                  nperseg = segment_length,
                                                  noverlap = segment_overlap,
                                                  window = window,
-                                                 detrend = 'constant')  #removes mean from each segment
+                                                 detrend = 'constant', #removes mean from each segment
+                                                 scaling = scaling)
     if plot_on:           
         num_samples = len(data)
-        sampling_period = 1/sampling_rate
+        sampling_period = 1/sampling_frequency
         duration = num_samples*sampling_period
         times = np.linspace(0, duration, num_samples)
         fig, axs = plt.subplots(2,1, figsize = (12,10), sharex = True)
@@ -378,25 +390,26 @@ if __name__ == '__main__':
     
 
     """
-    Test fft
+    Test power_spec
     """
-    print("\nanaties.signals: testing fft()...")
-    scaling_factor = 1  #for showing linearity of fft if you want
+    print("\nanaties.signals: testing power_spec()...")
     f1 = 20
     f2 = 33
-    num_points = 600   # Number of points
-    samp_pd = 0.01  # sampling period
+    num_points = 1000   # Number of points
+    samp_pd = 0.001  # sampling period
+    samp_freq = 1/samp_pd
     x = np.linspace(0.0, num_points*samp_pd, num_points)
-    y = scaling_factor*(np.sin(f1 * 2.0*np.pi*x) + 0.5*np.sin(f2 * 2.0*np.pi*x))
-    full_fft, power_spec, freqs = fft(y, 
-                                      samp_pd, 
-                                      include_neg = False, 
-                                      view_range = [5, 50], 
+    y = np.sin(f1 * 2.0*np.pi*x) + 0.5*np.sin(f2 * 2.0*np.pi*x)
+    spectral_dens, freqs = power_spec(y, 
+                                      samp_freq, 
+                                      segment_length = 512,
+                                      segment_overlap = 200,
+                                      view_range = [5, 50],
                                       plot_on = 1)
-    plt.title('signals.fft test')
+    plt.title('signals.power_spec() test')
     plt.show()
     
-    
+
     """
     Test spectrogram
     """
