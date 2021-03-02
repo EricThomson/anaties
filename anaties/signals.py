@@ -404,9 +404,11 @@ if __name__ == '__main__':
                                       samp_freq, 
                                       segment_length = 512,
                                       segment_overlap = 200,
-                                      view_range = [5, 50],
+                                      view_range = [3, 50],
                                       plot_on = 1)
     plt.title('signals.power_spec() test')
+    plt.axvline(f1, color = 'r')
+    plt.axvline(f2, color = 'r')
     plt.show()
     
 

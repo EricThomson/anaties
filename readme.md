@@ -64,7 +64,7 @@ For a discussion of the difference between relative and absolute tolerance value
 
 ## Acknowledgments
 - Songbird wav is open source from: https://freesound.org/people/Sonic-ranger/sounds/243677/
-- Developed with the support of NIH Bioinformatics, and the Neurobehavioral Core at NIEHS.
+- Developed with the support from NIH Bioinformatics and the Neurobehavioral Core at NIEHS.
 
 ## To do
 - add ax return for plot functions, when possible.
