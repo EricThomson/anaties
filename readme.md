@@ -77,6 +77,7 @@ https://github.com/cokelaer/spectrum
 https://pyspectrum.readthedocs.io/en/latest/
 https://mark-kramer.github.io/Case-Studies-Python/04.html
 - add ability to control event colors in spectrogram.
+- consider adding wavelets.
 - ind_limits: add checks for data, data_limits, clarify description and docs
 - Add audio playback of signals (see notes in audio_playback_workspace), incorporate this into some tests of filtering, etc.. simpleaudio package is too simple I think.
 - Add numerical tests with random seed set not just graphical eyeball tests.
