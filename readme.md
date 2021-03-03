@@ -72,13 +72,13 @@ For a discussion of the difference between relative and absolute tolerance value
 - For freqhist should I guarantee it sums to 1 even when bin widths don't match data limits? Probably not. Something to think about though.
 - In smoother, consider switching from filtfilt() to sosfiltfilt() for reasons laid out here: https://dsp.stackexchange.com/a/17255/51564
 - Convert notch filter to sos?
-- Make power spectrume stimation better than fft ffs (at *least* use welch):
+- For spectral density estimation consider adding multitaper option. Good discussions:
 https://github.com/cokelaer/spectrum
 https://pyspectrum.readthedocs.io/en/latest/
+https://mark-kramer.github.io/Case-Studies-Python/04.html
 - add ability to control event colors in spectrogram.
 - ind_limits: add checks for data, data_limits, clarify description and docs
 - Add audio playback of signals (see notes in audio_playback_workspace), incorporate this into some tests of filtering, etc.. simpleaudio package is too simple I think.
 - Add numerical tests with random seed set not just graphical eyeball tests.
 - Long-term: autodocs (sphinx?)
-- Long-term: Make audio player that shows location in waveform for spectrogram. This is more tricky than you might think. There are notes on it in background/.
 - Do I want data-scroller or not? Would prefer something better, maybe something like in pyqtgraph.
