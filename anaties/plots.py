@@ -184,20 +184,21 @@ def plot_with_events(x, y, linewidth = 0.5, color = 'black', all_events = None, 
     return ax
 
 
-def rect_highlight(shade_range, orientation = 'vert', color = (1,1,0), alpha = 0.3):
+def rect_highlight(shade_range, orientation = 'vert', color = (1,1,0), alpha = 0.3, ax = None):
     '''
-    overlay transluscent highlight over current figure 
+    overlay transluscent rectangular highlight over figure
     
     Inputs:
         shade_range [min, max] range to draw highlights on
         orientation (str): 'vert' or 'horiz' for vertical/horizontal highlight
         color (rgb): color of bar (default (1,1,0) yellow)
         alpha (float): level of transparency (0.3)
+        ax (axes): axes object to paint upon (None)
         
     Outputs: none -- just adds rectangle to current figure.
     
     To do: 
-        - add example here
+        - add axis inputs instead of just painting plt
     '''
     from matplotlib.patches import Rectangle
     shade_mag = shade_range[1]-shade_range[0]
@@ -213,10 +214,14 @@ def rect_highlight(shade_range, orientation = 'vert', color = (1,1,0), alpha = 0
     elif orientation == 'horiz': 
         x_ax = plt.gca().get_xlim()
         x_width = x_ax[1]-x_ax[0]
-        rect_xy = (x_ax[0], shade_mag[0]) #x, y
+        rect_xy = (x_ax[0], shade_range[0]) #x, y
         rect = Rectangle(rect_xy, width = x_width, height=shade_mag,
                          color = color, alpha = alpha)
-    plt.gca().add_patch(rect)
+        
+    if ax is not None:
+        ax.add_patch(rect)
+    else:
+        plt.gca().add_patch(rect)
     
     return
 
