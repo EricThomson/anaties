@@ -195,10 +195,11 @@ def rect_highlight(shade_range, orientation = 'vert', color = (1,1,0), alpha = 0
         alpha (float): level of transparency (0.3)
         ax (axes): axes object to paint upon (None)
         
-    Outputs: none -- just adds rectangle to current figure.
+    Outputs: none -- just adds rectangle to current figure or axes input.
     
-    To do: 
-        - add axis inputs instead of just painting plt
+    Notes
+        - If you ever want to add multiple rects to different axes:
+          https://stackoverflow.com/questions/47554753/can-not-put-single-artist-in-more-than-one-figure
     '''
     from matplotlib.patches import Rectangle
     shade_mag = shade_range[1]-shade_range[0]
