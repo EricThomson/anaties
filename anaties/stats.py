@@ -33,7 +33,7 @@ def se_mean(array, axis = None):
     """
     calculate std error of mean of 1d numpy array 
     """
-    return np.std(array)/np.sqrt(len(array))
+    return np.std(array, axis = axis)/np.sqrt(len(array))
 
 
 def se_median(array, axis = None):
