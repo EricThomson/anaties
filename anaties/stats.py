@@ -26,14 +26,18 @@ def mn_std(array, axis = None):
     """
     return mean and std deviation of numpy array 
     """
-    return np.mean(array, axis = axis), np.std(array)
+    return np.mean(array, axis = axis), np.std(array, ddof = 1)
 
 
 def se_mean(array, axis = None):
     """
     calculate std error of mean of 1d numpy array 
     """
+<<<<<<< HEAD
     return np.std(array, axis = axis)/np.sqrt(len(array))
+=======
+    return np.std(array, axis = axis, ddof = 1)/np.sqrt(len(array))
+>>>>>>> 9af872fca57059cec5b7239e2308980be22b4e56
 
 
 def se_median(array, axis = None):
