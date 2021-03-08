@@ -156,7 +156,7 @@ def paired_bar(xdata, ydata, xrange, xbin_width, axlabels = ['x', 'y'], plot_on 
     return bar_properties 
 
 
-def plot_with_events(x, y, linewidth = 0.5, color = 'black', all_events = None, event_colors = None):
+def plot_with_events(x, y, linewidth = 0.5, color = 'black', all_events = None, event_colors = None, ax = None):
     """
     Plot a signal and events...in technicolor!
     
@@ -167,20 +167,18 @@ def plot_with_events(x, y, linewidth = 0.5, color = 'black', all_events = None, 
         color for plot line (black)
         all_events: list of arrays (None)
         event_colors: list of colors (None)
+        ax (axes): axes object to paint upon (None)
     Output:
-        axis object so you can have fun
-    
-    To do:
-        Add exmaple
+        axes object so you can have fun
     """
-    f, ax = plt.subplots()
+    if ax is None:
+        f, ax = plt.subplots()
     if event_colors is not None:
         for event_ind, events in enumerate(all_events):
             for event in events:
                 ax.axvline(event, color=event_colors[event_ind], linewidth = 1)
     ax.plot(x, y, linewidth = linewidth, color = color)
     ax.autoscale(enable=True, axis='x', tight=True)
-    plt.get_current_fig_manager().show()  #brings window to front (not sure this works)
     return ax
 
 
