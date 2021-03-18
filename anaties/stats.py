@@ -32,11 +32,17 @@ def mean_std(array, axis = None):
 def se_mean(array, axis = None):
     """
     calculate std error of mean of a numpy array
+    
+    only works for 2d or 1d arrays
     """
+    if array.ndim > 2:
+        raise ValueError("se_mean only accepts 1d or 2d arrays")
     if axis is None:
         numels = len(array)
-    else:
-        numels = array.shape[axis]
+    elif axis == 0:
+        numels = array.shape[1]
+    elif axis == 1:
+        numels = array.shape[0]
     return np.nanstd(array, axis = axis, ddof = 1)/np.sqrt(numels)
 
 

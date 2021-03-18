@@ -67,7 +67,7 @@ For a discussion of the difference between relative and absolute tolerance value
 - Developed with the support from NIH Bioinformatics and the Neurobehavioral Core at NIEHS.
 
 ## To do
-- add tests to stats module.
+- add proper documentation and tests to stats module.
 - add ax return for plot functions, when possible.
 - add errorshade plot that acts as wrapper for fill_between.
 - For freqhist should I guarantee it sums to 1 even when bin widths don't match data limits? Probably not. Something to think about though.
