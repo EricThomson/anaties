@@ -19,8 +19,8 @@ Brief summary of utilities:
 
     stats (basic statistical things)
         - med_semed: median and std error of median of an array
-        - mn_sem: mean and std error of the mean of an array
-        - mn_std: mean and standard deviation of an array
+        - mean_sem: mean and std error of the mean of an array
+        - mean_std: mean and standard deviation of an array
         - se_mean: std err of mean of array
         - se_median: std error of median of array
         - cramers_v: cramers v for effect size for chi-square test
@@ -67,9 +67,9 @@ For a discussion of the difference between relative and absolute tolerance value
 - Developed with the support from NIH Bioinformatics and the Neurobehavioral Core at NIEHS.
 
 ## To do
+- add tests to stats module.
 - add ax return for plot functions, when possible.
 - add errorshade plot that acts as wrapper for fill_between.
-- add tests to stats module.
 - For freqhist should I guarantee it sums to 1 even when bin widths don't match data limits? Probably not. Something to think about though.
 - In smoother, consider switching from filtfilt() to sosfiltfilt() for reasons laid out here: https://dsp.stackexchange.com/a/17255/51564
 - Convert notch filter to sos?

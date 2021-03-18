@@ -12,34 +12,38 @@ def med_semed(array, axis = None):
     """
     return median and std error of the median or numpy array
     """
-    return np.median(array, axis = None), se_median(array, axis = None)
+    return np.nanmedian(array, axis = None), se_median(array, axis = None)
 
 
-def mn_sem(array, axis = None):
+def mean_sem(array, axis = None):
     """
     return mean and std error of mean of a numpy array
     """
-    return np.mean(array, axis = axis), se_mean(array, axis = axis)
+    return np.nanmean(array, axis = axis), se_mean(array, axis = axis)
 
 
-def mn_std(array, axis = None):
+def mean_std(array, axis = None):
     """
     return mean and std deviation of numpy array
     """
-    return np.mean(array, axis = axis), np.std(array, ddof = 1)
+    return np.nanmean(array, axis = axis), np.nanstd(array, ddof = 1)
 
 
 def se_mean(array, axis = None):
     """
-    calculate std error of mean of 1d numpy array
+    calculate std error of mean of a numpy array
     """
-    return np.std(array, axis = axis, ddof = 1)/np.sqrt(len(array))
+    if axis is None:
+        numels = len(array)
+    else:
+        numels = array.shape[axis]
+    return np.nanstd(array, axis = axis, ddof = 1)/np.sqrt(numels)
 
 
 
 def se_median(array, axis = None):
     """
-    Calculate standard error of the median of 1d numpy array
+    Calculate standard error of the median of a numpy array
     Uses the approximation 1.253*std_err_mean
 
     Adapted from:
@@ -68,4 +72,4 @@ def cramers_v(test_stat, n, df):
 
 
 if __name__ == '__main__':
-    print("no tests written for anaties.stats yet. come on brah")
+    print("no tests written for anaties.stats yet. come on bra")
