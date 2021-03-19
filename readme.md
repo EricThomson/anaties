@@ -69,7 +69,7 @@ For a discussion of the difference between relative and absolute tolerance value
 ## To do
 - add proper documentation and tests to stats module.
 - add ax return for plot functions, when possible.
-- add errorshade plot that acts as wrapper for fill_between.
+- plots: add errorshade plot that acts as wrapper for fill_between.
 - For freqhist should I guarantee it sums to 1 even when bin widths don't match data limits? Probably not. Something to think about though.
 - In smoother, consider switching from filtfilt() to sosfiltfilt() for reasons laid out here: https://dsp.stackexchange.com/a/17255/51564
 - Convert notch filter to sos?
