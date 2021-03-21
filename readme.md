@@ -67,6 +67,7 @@ For a discussion of the difference between relative and absolute tolerance value
 - Developed with the support from NIH Bioinformatics and the Neurobehavioral Core at NIEHS.
 
 ## To do
+- paired_bar (and mean_sem/std need to handle one point better: currently throwing warning)
 - add proper documentation and tests to stats module.
 - add ax return for plot functions, when possible.
 - plots: add errorshade plot that acts as wrapper for fill_between.

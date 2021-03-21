@@ -104,8 +104,8 @@ def paired_bar(xdata, ydata, xrange, xbin_width, axlabels = ['x', 'y'], plot_on 
         num_samples_bin = len(current_ydata)
         num_samples.append(num_samples_bin)
         ybinned_data.append(current_ydata)
-        if num_samples_bin > 0:
-            y_mn, y_sem = astats.mn_sem(current_ydata)
+        if num_samples_bin > 1:
+            y_mn, y_sem = astats.mean_sem(current_ydata)
         else:
             y_mn = np.nan
             y_sem = np.nan
