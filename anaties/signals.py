@@ -27,7 +27,7 @@ def smooth(data, window_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1
         
     Inputs:
         data: numpy array
-        window_type ('hanning'): string ('boxcar', 'gaussian', 'hanning', 'bartlett', 'blackman')
+        window_type ('hann'): string ('boxcar', 'gaussian', 'hann', 'bartlett', 'blackman')
         filter_width (11): int (wider is more smooth) odd is ideal
         sigma (2.): scalar std deviation only used for gaussian 
         plot_on (1): int determines plotting. 0 none, 1 plot signal, 2: also plot filter
@@ -81,7 +81,7 @@ def smooth_rows(data, window_type = 'hann', filter_width = 11, sigma = 2):
         
     Inputs:
         data: nxm numpy array (n=num signals, m = num dimensions)
-        window_type ('hanning'): string ('boxcar', 'gaussian', 'hanning', 'bartlett', 'blackman')
+        window_type ('hann'): string ('boxcar', 'gaussian', 'hann', 'bartlett', 'blackman')
         filter_width (11): int (wider is more smooth) odd is ideal
         sigma (2.): scalar std deviation only used for gaussian window
     Outputs

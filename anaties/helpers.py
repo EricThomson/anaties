@@ -90,6 +90,9 @@ def ind_limits(data, data_limits = None):
         first_ind: index of smallest data >= data_limits[0]
         last_ind: index of largest data <= data_limits[1]
     
+    Notes
+        When using the inds in slices, be sure you aren't missing the last one.
+        
     To do:
         Add checks for 1d data, increasing data, data_limits.
     """
