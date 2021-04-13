@@ -13,6 +13,33 @@ sys.path.append(str(Path('.').absolute().parent))
 import anaties.helpers as helpy
 import anaties.stats as astats
 
+
+def error_shade(x, y, error_mag, line_color='k', line_width=1, shade_color='gray', alpha=0.3, ax = None):
+    """
+    plot x and y line +/- shaded error region.
+    Currently provides minimal properties for changing line (color and linewidth)
+    
+    Inputs:
+        x: 1d array of x values
+        y: 1d array of y values
+        error_mag: 1d array of error values
+        line_color ('k'): color for main line
+        line_width (1): width of line
+        shade_color ('gray'): color for shaded error region
+        alpha (0.3): transparency of shaded region
+        ax (None): axes object if you are plotting it in another figure
+        
+    outputs:
+        axes object for plot
+    
+    """
+    if ax is None:
+        f, ax = plt.subplots()
+    ax.fill_between(x, y+error_mag, y-error_mag, alpha = alpha, color = shade_color)
+    ax.plot(x, y, color = line_color, linewidth = line_width)
+    return ax
+    
+
 def freqhist(data, bins, color = 'k'):
     """
     plot relative frequency histogram (instead of density or count). 

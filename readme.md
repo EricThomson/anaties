@@ -11,7 +11,8 @@ Brief summary of utilities:
         - notch_filter: notch filter to attenuate specific frequency (e.g. 60hz)
         - bandpass_filter: allow through frequencies within low- and high-cutoff
 
-    plots.py (basic plotting wrappers)
+    plots.py (basic plotting)
+        - error_shade: plot line with shaded error region
         - freqhist: calculate/plot a relative frequency histogram
         - paired_bar: bar plot for paired data
         - plot_with_events: plot with vertical lines to indicate events
@@ -67,6 +68,7 @@ For a discussion of the difference between relative and absolute tolerance value
 - Developed with the support from NIH Bioinformatics and the Neurobehavioral Core at NIEHS.
 
 ## To do
+- add test for error_shade
 - paired_bar (and mean_sem/std need to handle one point better: currently throwing warning)
 - add proper documentation and tests to stats module.
 - add ax return for plot functions, when possible.
