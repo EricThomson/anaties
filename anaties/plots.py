@@ -203,7 +203,8 @@ def plot_with_events(x, y, linewidth = 0.5, color = 'black', all_events = None, 
     if event_colors is not None:
         for event_ind, events in enumerate(all_events):
             for event in events:
-                ax.axvline(event, color=event_colors[event_ind], linewidth = 1)
+                ax.axvline(event, color=event_colors[event_ind], 
+                           linewidth = 1, zorder=3)
     ax.plot(x, y, linewidth = linewidth, color = color)
     ax.autoscale(enable=True, axis='x', tight=True)
     return ax

@@ -44,8 +44,8 @@ This will download the package and place the anaties folder inside that folder. 
     sys.path.append(anaties_path)
     from anaties import signals as sig
     from anaties import helpers as helpy
-
-I usually import plots as `aplots` and stats as `astats`.   
+    from anaties import plots as aplots
+    from anaties import stats as astats
 
 Where `anaties_path` is the path to the anaties folder you downloaded (e.g., 'x/y/z/anaties/'). Later if you want to update the package, you can just do `git pull origin master` from within `anaties_path`.
 
@@ -68,6 +68,7 @@ For a discussion of the difference between relative and absolute tolerance value
 - Developed with the support from NIH Bioinformatics and the Neurobehavioral Core at NIEHS.
 
 ## To do
+- Put everything into
 - add test for error_shade
 - paired_bar (and mean_sem/std need to handle one point better: currently throwing warning)
 - add proper documentation and tests to stats module.
