@@ -68,9 +68,14 @@ For a discussion of the difference between relative and absolute tolerance value
 - Developed with the support from NIH Bioinformatics and the Neurobehavioral Core at NIEHS.
 
 ## To do
-- Put everything into
-- add test for error_shade
+- Put everything into common namespace (__init__)
+- add test for plots.error_shade. 
+- Add return object for plots.rect_highlight()
 - paired_bar (and mean_sem/std need to handle one point better: currently throwing warning)
+- Add a proper suptitle fix in aplots it is a pita to add manually/remember:
+      f.suptitle(..., fontsize=16)
+      f.tight_layout()
+      f.subplots_adjust(top=0.9)
 - add proper documentation and tests to stats module.
 - add ax return for plot functions, when possible.
 - plots: add errorshade plot that acts as wrapper for fill_between.

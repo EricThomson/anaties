@@ -183,7 +183,8 @@ def paired_bar(xdata, ydata, xrange, xbin_width, axlabels = ['x', 'y'], plot_on 
     return bar_properties 
 
 
-def plot_with_events(x, y, linewidth = 0.5, color = 'black', all_events = None, event_colors = None, ax = None):
+def plot_with_events(x, y, linewidth = 0.5, color = 'black', event_linewidth = 1, 
+                     all_events = None, event_colors = None, ax = None):
     """
     Plot a signal and events...in technicolor!
     
@@ -204,7 +205,7 @@ def plot_with_events(x, y, linewidth = 0.5, color = 'black', all_events = None, 
         for event_ind, events in enumerate(all_events):
             for event in events:
                 ax.axvline(event, color=event_colors[event_ind], 
-                           linewidth = 1, zorder=3)
+                           linewidth = event_linewidth, zorder=3)
     ax.plot(x, y, linewidth = linewidth, color = color)
     ax.autoscale(enable=True, axis='x', tight=True)
     return ax
@@ -223,6 +224,9 @@ def rect_highlight(shade_range, orientation = 'vert', color = (1,1,0), alpha = 0
         
     Outputs: none -- just adds rectangle to current figure or axes input.
     
+    To do:
+        have it return axes so people can work with them!
+    
     Notes
         - If you ever want to add multiple rects to different axes:
           https://stackoverflow.com/questions/47554753/can-not-put-single-artist-in-more-than-one-figure
@@ -232,14 +236,20 @@ def rect_highlight(shade_range, orientation = 'vert', color = (1,1,0), alpha = 0
     
     # vertically oriented bar
     if orientation == 'vert':
-        y_ax = plt.gca().get_ylim()
+        if ax is not None:
+            y_ax = ax.get_ylim()
+        else:
+            y_ax = plt.gca().get_ylim()
         y_height = y_ax[1]-y_ax[0]
         rect_xy = (shade_range[0], y_ax[0])
         rect = Rectangle(rect_xy, width = shade_mag, height= y_height,
                          color = color, alpha = alpha)
     #horizontally oriented bar (for spectrogram etc)
     elif orientation == 'horiz': 
-        x_ax = plt.gca().get_xlim()
+        if ax is not None:
+            x_ax = ax.get_xlim()
+        else:
+            x_ax = plt.gca().get_xlim()
         x_width = x_ax[1]-x_ax[0]
         rect_xy = (x_ax[0], shade_range[0]) #x, y
         rect = Rectangle(rect_xy, width = x_width, height=shade_mag,
