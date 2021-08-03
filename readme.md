@@ -69,7 +69,8 @@ For a discussion of the difference between relative and absolute tolerance value
 
 ## To do
 - Put everything into common namespace (__init__)
-- add test for plots.error_shade. 
+- finish plots.twinx make sure it works
+- add test for plots.error_shade.
 - Add return object for plots.rect_highlight()
 - paired_bar (and mean_sem/std need to handle one point better: currently throwing warning)
 - Add a proper suptitle fix in aplots it is a pita to add manually/remember:

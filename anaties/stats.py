@@ -32,8 +32,10 @@ def mean_std(array, axis = None):
 def se_mean(array, axis = None):
     """
     calculate std error of mean of a numpy array
-    
+
     only works for 2d or 1d arrays
+
+    todo: improve documentation here of numels calc, and ddof
     """
     if array.ndim > 2:
         raise ValueError("se_mean only accepts 1d or 2d arrays")
@@ -78,4 +80,4 @@ def cramers_v(test_stat, n, df):
 
 
 if __name__ == '__main__':
-    print("no tests written for anaties.stats yet. come on bra")
+    print("no tests written for anaties.stats yet. come on bruv")

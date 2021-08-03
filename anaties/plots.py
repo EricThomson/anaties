@@ -263,7 +263,41 @@ def rect_highlight(shade_range, orientation = 'vert', color = (1,1,0), alpha = 0
     return
 
 
-
+def twinx(x, y1, y2, ylabel1='y1', ylabel2='y2', 
+               color1='black', color2='blue', title='Title', xlabel='x'):
+    """
+    Plot data with different units on same axes.
+    
+    Wrapper for twinx() in matplotlib.
+    
+    inputs:
+        x: x values
+        y1: y values for left axis
+        y2: y values for right axis
+        ylabel1: label for left axis
+        ylabel2: label for right axis
+        xlabel: label for common x axis
+        color1: color for line1 and associated axes
+        color2: color for line2 and associated axes
+    outputs ax1, ax2, the two axes objects
+    
+    To do: add color to labels
+           add title stuff
+           make sure things seem reasonable
+           test out in wt_learning_analysis bit
+           add markerstyle, w/default
+           add markersize, w/default
+    """
+    f, ax1 = plt.subplots()
+    ax1.plot(x, y1, color = color1)
+    if ylabel1 is not None:
+        ax1.set_ylabel(ylabel1, fontsize = 18, color = color1)
+    
+    ax2 = ax1.twinx()
+    if ylabel2 is not None:
+        ax2.plot(x, y2, color = color2)
+    
+    return ax1, ax2
 
 
 #%%  run some tests
