@@ -12,7 +12,7 @@ def med_semed(array, axis = None):
     """
     return median and std error of the median or numpy array
     """
-    return np.nanmedian(array, axis = None), se_median(array, axis = None)
+    return np.nanmedian(array, axis = axis), se_median(array, axis = axis)
 
 
 def mean_sem(array, axis = None):
