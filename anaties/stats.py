@@ -26,14 +26,15 @@ def mean_std(array, axis = None):
     """
     return mean and std deviation of numpy array
     """
-    return np.nanmean(array, axis = axis), np.nanstd(array, ddof = 1)
+    return np.nanmean(array, axis = axis), np.nanstd(array, axis=None, ddof = 1)
 
 
 def se_mean(array, axis = None):
     """
     calculate std error of mean of a numpy array
+    Sample standard deviation divided by the square root of number of samples
 
-    only works for 2d or 1d arrays
+    only works for 1d or 2d arrays
 
     todo: improve documentation here of numels calc, and ddof
     """
@@ -52,7 +53,7 @@ def se_mean(array, axis = None):
 def se_median(array, axis = None):
     """
     Calculate standard error of the median of a numpy array
-    Uses the approximation 1.253*std_err_mean
+    Uses the approximation se_median = 1.253*se_mean
 
     Adapted from:
     https://stats.stackexchange.com/a/196666/17624
@@ -65,7 +66,7 @@ def cramers_v(test_stat, n, df):
     cramer's v for calculating effect size of chi-square test.
     test_stat is chi-square statistic
     n is total number of observations
-    df is df*  min((r-1)(c-1))
+    df is df* =  min((r-1)(c-1))
 
     output: V value
 
