@@ -68,6 +68,7 @@ For a discussion of the difference between relative and absolute tolerance value
 - Developed with the support from NIH Bioinformatics and the Neurobehavioral Core at NIEHS.
 
 ## To do
+- Add 3d array support for stat functions like mn_sem
 - Put everything into common namespace (__init__)
 - finish plots.twinx make sure it works
 - add test for plots.error_shade.
