@@ -14,8 +14,8 @@ from scipy.signal import welch
 import scipy.signal.windows as windows
 from scipy.io import wavfile
 
-sys.path.append(str(Path('.').absolute().parent))
-import anaties.helpers as helpy
+
+from helpers import ind_limits
 
 
 #%%
@@ -142,7 +142,7 @@ def power_spec(data,
     
     
     if plot_on:
-        first_ind, last_ind = helpy.ind_limits(frequencies, view_range) 
+        first_ind, last_ind = ind_limits(frequencies, view_range) 
         plt.figure()
         plt.semilogy(frequencies[first_ind: last_ind], 
                  ps[first_ind: last_ind], 
@@ -323,7 +323,7 @@ def spectrogram(data,
         axs[0].plot(times, data, color = (0.5, 0.5, 0.5), linewidth = 0.5)
         axs[0].autoscale(enable=True, axis='x', tight=True)
         # Plot spectrogram
-        first_ind, last_ind = helpy.ind_limits(freqs, view_range)   
+        first_ind, last_ind = ind_limits(freqs, view_range)   
         axs[1].pcolormesh(time_bins, 
                           freqs[first_ind:last_ind], 
                           10*np.log10(spect[first_ind: last_ind,:]), cmap = colormap);

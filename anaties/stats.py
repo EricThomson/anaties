@@ -7,7 +7,6 @@ https://github.com/EricThomson/anaties
 import numpy as np
 
 
-
 def med_semed(array, axis = None):
     """
     return median and std error of the median or numpy array

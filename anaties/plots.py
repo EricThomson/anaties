@@ -9,9 +9,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 
-sys.path.append(str(Path('.').absolute().parent))
-import anaties.helpers as helpy
-import anaties.stats as astats
+
+from helpers import get_bins
+from stats import mean_sem
 
 
 def error_shade(x, y, error_mag, line_color='k', line_width=1, shade_color='gray', alpha=0.3, ax = None):
@@ -116,7 +116,7 @@ def paired_bar(xdata, ydata, xrange, xbin_width, axlabels = ['x', 'y'], plot_on 
     if xdata.size != ydata.size:
         raise ValueError('xdata and ydata are paired data: they must be the same size')
         
-    xbin_edges, xbin_centers = helpy.get_bins(xrange[0], xrange[1], bin_width = xbin_width)
+    xbin_edges, xbin_centers = get_bins(xrange[0], xrange[1], bin_width = xbin_width)
     num_bins = len(xbin_centers)
     # for each element of xdata, get its bin number between 1...num_bins
     xdata_inds = np.digitize(xdata, xbin_edges, right = True) 
@@ -132,7 +132,7 @@ def paired_bar(xdata, ydata, xrange, xbin_width, axlabels = ['x', 'y'], plot_on 
         num_samples.append(num_samples_bin)
         ybinned_data.append(current_ydata)
         if num_samples_bin > 1:
-            y_mn, y_sem = astats.mean_sem(current_ydata)
+            y_mn, y_sem = mean_sem(current_ydata)
         else:
             y_mn = np.nan
             y_sem = np.nan

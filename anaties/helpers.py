@@ -9,8 +9,6 @@ import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 
-sys.path.append(str(Path('.').absolute().parent))
-
 
 def datetime_string():
     """
