@@ -7,7 +7,6 @@ import sys
 from types import SimpleNamespace
 import matplotlib.pyplot as plt
 import numpy as np
-from pathlib import Path
 
 
 from helpers import get_bins

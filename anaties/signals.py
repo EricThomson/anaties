@@ -5,7 +5,6 @@ https://github.com/EricThomson/anaties
 """
 
 import sys
-from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt 
 from scipy import signal

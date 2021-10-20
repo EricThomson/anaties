@@ -3,8 +3,6 @@ generic helper functions for anaties package
 
 https://github.com/EricThomson/anaties
 """
-import sys
-from pathlib import Path
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
