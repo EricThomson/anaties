@@ -8,6 +8,9 @@ https://github.com/EricThomson/anaties
 """
 
 from setuptools import setup, find_packages
+from pathlib import Path
+this_directory = Path(__file__).parent
+long_description = (this_directory / "readme.md").read_text()
 
 setup(
       name='anaties',
@@ -21,6 +24,10 @@ setup(
       install_requires=[
           'numpy',
           'matplotlib',
-          'scipy',]
+          'scipy',],
+      long_description = long_description,
+      long_description_content_type="text/markdown"
+      
+      
       )
 
