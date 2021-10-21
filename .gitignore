@@ -3,9 +3,11 @@
 *__pycache__*
 *dropbox*
 desktop.ini
-/background
+background/
 *dll*
 *exe*
 *workspace.py
 *.docx
 *egg*
+build/
+dist/
