@@ -15,7 +15,7 @@ Usage is simple, just `import anaties as ana` and `ana.function_name()`. You can
     # rect_highlight
     plt.plot([0, 1], [0,1], color='k', linewidth=0.6)
     plt.grid()
-    ana.plots.rect_highlight([0.25, 0.5])
+    ana.rect_highlight([0.25, 0.5])
 
 Other utilities are listed below.
 
