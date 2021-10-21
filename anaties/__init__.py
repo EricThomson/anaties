@@ -3,7 +3,7 @@ Packaging for anaties
 
 https://github.com/EricThomson/anaties
 """
-name = 'anaties'
+
 from .signals import smooth
 from .signals import smooth_rows
 from .signals import power_spec

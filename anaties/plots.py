@@ -4,14 +4,17 @@ Plotting functions for anaties package
 https://github.com/EricThomson/anaties
 """
 import sys
+from pathlib import Path
 from types import SimpleNamespace
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-from helpers import get_bins
-from stats import mean_sem
-
+# sys.path.append(str(Path('.').absolute().parent))
+# from anaties.helpers import get_bins
+# from anaties.stats import mean_sem
+from .helpers import get_bins
+from .stats import mean_sem
 
 def error_shade(x, y, error_mag, line_color='k', line_width=1, shade_color='gray', alpha=0.3, ax = None):
     """

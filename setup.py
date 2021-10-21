@@ -17,10 +17,10 @@ setup(
       author_email="thomson.eric@gmail.com",
       licence="MIT",
       url="https://github.com/EricThomson/anaties",
-      packages=find_packages(include=['anaties', 'anaties.*'],
+      packages=find_packages(include=['anaties', 'anaties.*']),
       install_requires=[
           'numpy',
           'matplotlib',
-          'scipy',])
+          'scipy',]
       )
 

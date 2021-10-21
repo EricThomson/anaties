@@ -7,7 +7,6 @@ import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 def datetime_string():
     """
     create a datetime string of form _YYYYMMDD_HHMMSS (year month day _ hour minute second)

@@ -5,6 +5,7 @@ https://github.com/EricThomson/anaties
 """
 
 import sys
+from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt 
 from scipy import signal
@@ -13,9 +14,9 @@ from scipy.signal import welch
 import scipy.signal.windows as windows
 from scipy.io import wavfile
 
-
-from helpers import ind_limits
-
+# sys.path.append(str(Path('.').absolute().parent))
+# from anaties.helpers import ind_limits
+from .helpers import ind_limits
 
 #%%
 def smooth(data, window_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1):
