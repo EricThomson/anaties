@@ -57,7 +57,7 @@ Other utilities are listed below.
 - Developed with the support from NIH Bioinformatics and the Neurobehavioral Core at NIEHS.
 
 ## To do: More important
-- Add 3d array support for stat functions like mn_sem
+- add actual testing (pytest)
 - finish plots.twinx make sure it works
 - add test for plots.error_shade.
 - Add return object for plots.rect_highlight()
@@ -79,9 +79,13 @@ https://mark-kramer.github.io/Case-Studies-Python/04.html
 - consider adding wavelets.
 - ind_limits: add checks for data, data_limits, clarify description and docs
 - Add numerical tests with random seed set not just graphical eyeball tests.
+
 ## To do: longer term
 - Add audio playback of signals (see notes in audio_playback_workspace), incorporate this into some tests of filtering, etc.. simpleaudio package is too simple I think.
 - autodocs (sphinx?)
+- coverage
+- CI/CD with github actions
+- Add 3d array support for stat functions like mn_sem
 
 ## Useful sources
 ### Smoothing
