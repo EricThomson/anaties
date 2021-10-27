@@ -11,3 +11,4 @@ background/
 *egg*
 build/
 dist/
+*coverage

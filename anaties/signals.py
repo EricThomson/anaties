@@ -19,12 +19,12 @@ from scipy.io import wavfile
 from .helpers import ind_limits
 
 #%%
-def smooth(data, window_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1):
+def smooth(data, window_type='hann', filter_width=11, sigma=2, plot_on=1):
     """ 
     Smooth 1d data with moving window (uses filtfilt to have zero phase distortion)
     Wrapper for scipy.signal.filtfilt 
     To do: consider replacing with sosfiltfilt
-        
+
     Inputs:
         data: numpy array
         window_type ('hann'): string ('boxcar', 'gaussian', 'hann', 'bartlett', 'blackman')
@@ -34,8 +34,8 @@ def smooth(data, window_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1
     Outputs
         data_smoothed: signal after being smoothed 
         filter_window: the window used for smoothing
-        
-    Notes: 
+
+    Notes:
         Uses gustaffson's method to handle edge artifacts
         Currently accepted window_type options:
             hann (default) - cosine bump filter_width is only param
@@ -56,16 +56,16 @@ def smooth(data, window_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1
     elif window_type == 'gaussian':
         filter_window = windows.gaussian(filter_width, sigma)
     filter_window = filter_window/np.sum(filter_window)
-    data_smoothed = signal.filtfilt(filter_window, 1, 
+    data_smoothed = signal.filtfilt(filter_window, 1,
                                       data, method = "gust") #pad
 
     if plot_on:
         if plot_on > 1:
             plt.plot(filter_window)
-            plt.title(f'{window_type} filter') 
+            plt.title(f'{window_type} filter')
         plt.figure('signal', figsize=(10,5))
-        plt.plot(data, color = (0.7, 0.7, 0.7), label = 'noisy signal', linewidth = 1)
-        plt.plot(data_smoothed, color = 'r', label = 'smoothed signal')
+        plt.plot(data, color = (0.7, 0.7, 0.7), label = 'noisy signal', linewidth=1)
+        plt.plot(data_smoothed, color='r', label='smoothed signal')
         plt.xlim(0, len(data_smoothed))
         plt.xlabel('sample')
         plt.grid(True)
@@ -74,11 +74,11 @@ def smooth(data, window_type = 'hann', filter_width = 11, sigma = 2, plot_on = 1
     return data_smoothed, filter_window
 
 
-def smooth_rows(data, window_type = 'hann', filter_width = 11, sigma = 2):
-    """ 
+def smooth_rows(data, window_type='hann', filter_width=11, sigma=2):
+    """
     Smooth each row of a 2d array: uses smooth() see that for more details
     for the params.
-        
+
     Inputs:
         data: nxm numpy array (n=num signals, m = num dimensions)
         window_type ('hann'): string ('boxcar', 'gaussian', 'hann', 'bartlett', 'blackman')
@@ -91,10 +91,10 @@ def smooth_rows(data, window_type = 'hann', filter_width = 11, sigma = 2):
     data_smoothed = []
     for row in range(nrows):
         smoothed_row, _ = smooth(data[row,:],
-                                 window_type = window_type, 
-                                 filter_width = filter_width,
-                                 sigma = sigma,
-                                 plot_on = False)
+                                 window_type=window_type,
+                                 filter_width=filter_width,
+                                 sigma=sigma,
+                                 plot_on=False)
         data_smoothed.append(smoothed_row)
     return np.asarray(data_smoothed)
 
