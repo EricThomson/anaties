@@ -1,5 +1,5 @@
 """
-Packaging for anaties 
+Packaging for anaties
 
 https://github.com/EricThomson/anaties
 """
@@ -25,11 +25,9 @@ from .stats import se_median
 from .stats import cramers_v
 
 from .helpers import datetime_string
+from .helpers import file_exists
 from .helpers import get_bins
 from .helpers import get_offdiag_vals
 from .helpers import ind_limits
 from .helpers import is_symmetric
 from .helpers import rand_rgb
-
-
-

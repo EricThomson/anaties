@@ -4,6 +4,7 @@ generic helper functions for anaties package
 https://github.com/EricThomson/anaties
 """
 import datetime
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -19,6 +20,22 @@ def datetime_string():
         Single string of form' '_YYYYMMDD_HHMMSS' (year month day _ hour minute second)
     """
     return datetime.datetime.now().strftime("_%Y%m%d_%H%M%S")
+
+
+def file_exists(filepath):
+    """
+    check to see if the file specified in filepath exists
+
+    Inputs:
+        filepath: string
+
+    Output:
+        file_exists: bool
+    """
+    file_exists = False
+    if os.path.isfile(filepath):
+        file_exists = True
+    return file_exists
 
 
 def get_bins(min_edge, max_edge, bin_width=1):
@@ -43,7 +60,8 @@ def get_bins(min_edge, max_edge, bin_width=1):
         print("get_bins: Warning bin_width may not exactly divide up the given range of values.")
 
     bin_edges = np.arange(min_edge, max_edge + bin_width, bin_width)
-    bin_centers = np.arange(min_edge + bin_width / 2, max_edge + bin_width / 2, bin_width)
+    bin_centers = np.arange(min_edge + bin_width / 2,
+                            max_edge + bin_width / 2, bin_width)
     return bin_edges, bin_centers
 
 
@@ -67,7 +85,8 @@ def get_offdiag_vals(array):
     Adapted from:
         https://stackoverflow.com/a/44395030/1886357
     """
-    assert is_symmetric(array), print("get_offdiag_vals() requires symmetric array")
+    assert is_symmetric(array), print(
+        "get_offdiag_vals() requires symmetric array")
     num_rows = array.shape[0]
     # get indices of lower diag, not inclucing diagonal
     offdiag_indices = np.tril_indices(num_rows, k=-1)

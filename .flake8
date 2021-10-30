@@ -1,0 +1,18 @@
+[flake8]
+ignore=
+    # line too long
+    E501,
+    # spacing around math
+    E226,
+    #line break after binary operator
+    W504
+exclude=
+    # no need to lint our build documentation
+    build/,
+    # background contains old code
+    background/,
+    # workspace contains code I'm working on
+    *workspace.py
+per-file-ignores =
+   # imported but unused
+    __init__.py: F401

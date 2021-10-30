@@ -46,6 +46,7 @@ Other utilities are listed below.
 
         helpers.py (generic utility functions for use everywhere)
             - datetime_string : return date_time string to use for naming files etc
+            - file_exists: check to see if file exists
             - get_bins: get bin edges and centers, given limits and bin width
             - get_offdiag_vals: get lower off-diagonal values of a symmetric matrix
             - ind_limits: return indices that contain array data within range
@@ -57,8 +58,10 @@ Other utilities are listed below.
 - Developed with the support from NIH Bioinformatics and the Neurobehavioral Core at NIEHS.
 
 ## To do: More important
+- finish linting code
+- add directory_exists to helpers
 - add actual testing (pytest)
-- finish plots.twinx make sure it works
+- finish plots.twinx and make sure it works
 - add test for plots.error_shade.
 - Add return object for plots.rect_highlight()
 - paired_bar and mean_sem/std need to handle one point better: currently throwing warning

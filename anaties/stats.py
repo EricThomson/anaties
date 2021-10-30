@@ -7,28 +7,28 @@ https://github.com/EricThomson/anaties
 import numpy as np
 
 
-def med_semed(array, axis = None):
+def med_semed(array, axis=None):
     """
     return median and std error of the median or numpy array
     """
-    return np.nanmedian(array, axis = axis), se_median(array, axis = axis)
+    return np.nanmedian(array, axis=axis), se_median(array, axis=axis)
 
 
-def mean_sem(array, axis = None):
+def mean_sem(array, axis=None):
     """
     return mean and std error of mean of a numpy array
     """
-    return np.nanmean(array, axis = axis), se_mean(array, axis = axis)
+    return np.nanmean(array, axis=axis), se_mean(array, axis=axis)
 
 
-def mean_std(array, axis = None):
+def mean_std(array, axis=None):
     """
     return mean and std deviation of numpy array
     """
-    return np.nanmean(array, axis = axis), np.nanstd(array, axis=None, ddof = 1)
+    return np.nanmean(array, axis=axis), np.nanstd(array, axis=None, ddof=1)
 
 
-def se_mean(array, axis = None):
+def se_mean(array, axis=None):
     """
     calculate std error of mean of a numpy array
     Sample standard deviation divided by the square root of number of samples
@@ -45,11 +45,10 @@ def se_mean(array, axis = None):
         numels = array.shape[1]
     elif axis == 1:
         numels = array.shape[0]
-    return np.nanstd(array, axis = axis, ddof = 1)/np.sqrt(numels)
+    return np.nanstd(array, axis=axis, ddof=1)/np.sqrt(numels)
 
 
-
-def se_median(array, axis = None):
+def se_median(array, axis=None):
     """
     Calculate standard error of the median of a numpy array
     Uses the approximation se_median = 1.253*se_mean
@@ -57,7 +56,7 @@ def se_median(array, axis = None):
     Adapted from:
     https://stats.stackexchange.com/a/196666/17624
     """
-    return 1.2533*se_mean(array, axis = axis)
+    return 1.2533*se_mean(array, axis=axis)
 
 
 def cramers_v(test_stat, n, df):
@@ -69,14 +68,13 @@ def cramers_v(test_stat, n, df):
 
     output: V value
 
-    Interpreting V will depend on degrees of freedom (for instance, more degrees of freeecom
-    means smaller effect size is impressive).
+    Interpreting V depends on degrees of freedom (for instance, higher
+    dof means smaller effect size can still be "interesting" effect).
 
     See:
     https://www.real-statistics.com/chi-square-and-f-distributions/effect-size-chi-square/
     """
     return np.sqrt(test_stat/(n*df))
-
 
 
 if __name__ == '__main__':
