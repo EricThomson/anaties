@@ -31,7 +31,7 @@ def file_exists(filepath):
         filepath: string
 
     Output:
-        file_exists: bool
+        bool (True if file exists, False if it does not)
     """
     return os.path.isfile(filepath)
 
