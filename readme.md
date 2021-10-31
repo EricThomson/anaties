@@ -58,19 +58,18 @@ Other utilities are listed below.
 - Developed with the support from NIH Bioinformatics and the Neurobehavioral Core at NIEHS.
 
 ## To do: More important
-- finish linting code
-- add directory_exists to helpers
-- add actual testing (pytest)
+- finish adding tests.
+- add proper documentation and tests to stats module.
+- add ax return for all plot functions, when possible.
 - finish plots.twinx and make sure it works
 - add test for plots.error_shade.
 - Add return object for plots.rect_highlight()
-- paired_bar and mean_sem/std need to handle one point better: currently throwing warning
+- consider adding directory_exists to helpers
+- paired_bar and mean_sem/std need to handle one point better (throws warning)
 - Add a proper suptitle fix in aplots it is a pita to add manually/remember:
       f.suptitle(..., fontsize=16)
       f.tight_layout()
       f.subplots_adjust(top=0.9)
-- add proper documentation and tests to stats module.
-- add ax return for all plot functions, when possible.
 - For freqhist should I guarantee it sums to 1 even when bin widths don't match data limits? Probably not. Something to think about though.
 - In smoother, consider switching from filtfilt() to sosfiltfilt() for reasons laid out here: https://dsp.stackexchange.com/a/17255/51564
 - Convert notch filter to sos?
@@ -79,15 +78,14 @@ https://github.com/cokelaer/spectrum
 https://pyspectrum.readthedocs.io/en/latest/
 https://mark-kramer.github.io/Case-Studies-Python/04.html
 - add ability to control event colors in spectrogram.
-- consider adding wavelets.
 - ind_limits: add checks for data, data_limits, clarify description and docs
 - Add numerical tests with random seed set not just graphical eyeball tests.
 
 ## To do: longer term
 - Add audio playback of signals (see notes in audio_playback_workspace), incorporate this into some tests of filtering, etc.. simpleaudio package is too simple I think.
 - autodocs (sphinx?)
-- coverage
 - CI/CD with github actions
+- consider adding wavelets.
 - Add 3d array support for stat functions like mn_sem
 
 ## Useful sources

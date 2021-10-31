@@ -24,7 +24,8 @@ def datetime_string():
 
 def file_exists(filepath):
     """
-    check to see if the file specified in filepath exists
+    Check to see if the file specified in filepath exists
+    Wrapper for os.path.isfile()
 
     Inputs:
         filepath: string
@@ -32,10 +33,7 @@ def file_exists(filepath):
     Output:
         file_exists: bool
     """
-    file_exists = False
-    if os.path.isfile(filepath):
-        file_exists = True
-    return file_exists
+    return os.path.isfile(filepath)
 
 
 def get_bins(min_edge, max_edge, bin_width=1):
