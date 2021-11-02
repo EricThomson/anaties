@@ -299,7 +299,33 @@ def twinx(x, y1, y2, ylabel1='y1', ylabel2='y2',
 
     return ax1, ax2
 
+def vlines(xvalues, axes=None, line_color='black', line_width=1):
+    """
+    Plot all values in xvalues as vertical lines along x axis.
+    If no axes object is specified, you will end up with vertical lines.
 
+    Inputs:
+        xvalues: 1d array or list of x values to plot
+        axes (None): axes object to draw events to
+        line_color ('black'): color to make the vertical lines
+        line_width (1): width of lines
+
+    Outputs:
+        axes object for plotting fun
+    """
+    if (xvalues is None) or (len(xvalues)==0):
+        print("No x values provided to plot_vlines()")
+        return
+
+    if axes is None:
+        f, ax = plt.subplots()
+
+    for xval in xvalues:
+        axes.axvline(xval, zorder=3, color=line_color, linewidth=line_width)
+
+    return axes
+
+    
 # %%  run some tests
 if __name__ == '__main__':
     plt.close('all')

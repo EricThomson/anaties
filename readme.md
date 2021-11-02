@@ -34,7 +34,8 @@ Other utilities are listed below.
             - freqhist: calculate/plot a relative frequency histogram
             - paired_bar: bar plot for paired data
             - plot_with_events: plot with vertical lines to indicate events
-            - rect_highlight: overlay rectangular highlight on current figure
+            - rect_highlight: overlay rectangular highlight to figure
+            - vlines: add vertical lines to figure
 
         stats (basic statistical things)
             - med_semed: median and std error of median of an array
@@ -60,6 +61,7 @@ Other utilities are listed below.
 ## To do: More important
 - finish adding tests.
 - add proper documentation and tests to stats module.
+- integrate vlines into pypi and version up (maybe good test for ci)
 - add ax return for all plot functions, when possible.
 - finish plots.twinx and make sure it works
 - add test for plots.error_shade.
