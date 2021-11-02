@@ -1,5 +1,5 @@
 # anaties
-An analysis utilities package. Common operations like signal smoothing that I find myself using in multiple projects.
+Anaties (contraction of 'analysis utilities'). A place for common operations like signal smoothing that are useful across all my data analysis projects.
 
 
 ## Installation and usage
@@ -7,17 +7,24 @@ Install with pip:
 
     pip install anaties
 
-Usage is simple, just `import anaties as ana` and `ana.function_name()`. You can test it out with:
+When a new release is made, upgrade with:
 
-    #datetime_string
+    pip install anaties --upgrade
+
+Usage is simple. In your code:
+
+    import anaties as ana
+    ana.function_name()
+
+You can test it out with:
+
+    import anaties as ana
     print(ana.datetime_string())
 
-    # rect_highlight
     plt.plot([0, 1], [0,1], color='k', linewidth=0.6)
-    plt.grid()
     ana.rect_highlight([0.25, 0.5])
 
-Other utilities are listed below.
+All other functions are listed below.
 
 ## Brief summary of all utilities  
 
@@ -101,3 +108,6 @@ I may add wavelets at some point, but it isn't plug-and-play enough for this rep
 ### Tolerance values
 For a discussion of the difference between relative and absolute tolerance values when testing floats for equality (for instance as used in `helpers.is_symmetric()`) see:
  https://stackoverflow.com/questions/65909842/what-is-rtol-for-in-numpys-allclose-function
+
+ ### Suggestions?
+ If there is something you'd like to see, please open an issue.

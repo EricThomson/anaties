@@ -16,6 +16,7 @@ from .plots import freqhist
 from .plots import paired_bar
 from .plots import plot_with_events
 from .plots import rect_highlight
+from .plots import vlines
 
 from .stats import med_semed
 from .stats import mean_sem
