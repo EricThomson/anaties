@@ -11,4 +11,5 @@ background/
 *egg*
 build/
 dist/
+htmlcov/
 *coverage
