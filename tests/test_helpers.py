@@ -3,34 +3,39 @@ Tests for helpers in anaties package
 
 https://github.com/EricThomson/anaties
 """
-import os
 import numpy as np
-import tempfile
+from freezegun import freeze_time
 
 from anaties import helpers
 
 
 def test_datetime_string():
-    assert False
+    """
+    Use the freezegun package to set a particular time
+    and test in relation to that. For passing condition,
+    fix datetime to your set value using freezegun. For
+    failing condition, set it to now.
+    """
+    comparison_datestring = "_20120114_120001"
+    dts1 = helpers.datetime_string()
+    with freeze_time("2012-01-14 12:00:01"):
+        dts2 = helpers.datetime_string()
+    assert dts1 != comparison_datestring
+    assert dts2 == comparison_datestring
 
 
 def test_file_exists(tmp_path):
     """
-    NOPE: do this: https://docs.pytest.org/en/6.2.x/tmpdir.html
-    This test uses a couple of tricks.
+    Use the temp_path fixture provided by pytest: it is a temporary
+    Path directory that you can then use to generate a file.
 
-    First, create a context manager that generates a temporary directory
-    that will garbage collect the directory and all its contents after exiting
-    the block.
-
-    Second, hack a touch command with the open(temp_filepath) trick.
-
-    https://stackoverflow.com/a/10940847/1886357
-    https://stackoverflow.com/a/12654798/1886357
+    For passing condition, create a file. For failing condition, do not.
     """
     temp_filepath_pass = tmp_path / 'tmp.txt'
     temp_filepath_pass.write_text("content")
+    temp_filepath_fail = tmp_path / 'foo.txt'
     assert helpers.file_exists(temp_filepath_pass)
+    assert not helpers.file_exists(temp_filepath_fail)
 
 
 def test_get_bins():

@@ -25,7 +25,7 @@ def datetime_string():
 def file_exists(filepath):
     """
     Check to see if the file specified in filepath exists
-    Wrapper for os.path.isfile()
+    A pure wrapper for os.path.isfile()
 
     Inputs:
         filepath: string
