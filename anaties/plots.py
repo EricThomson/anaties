@@ -314,18 +314,18 @@ def vlines(xvalues, axes=None, line_color='black', line_width=1):
         axes object for plotting fun
     """
     if (xvalues is None) or (len(xvalues)==0):
-        print("No x values provided to plot_vlines()")
-        return
+        print("anaties warning: no x values for plot_vlines().")
+        return axes
 
     if axes is None:
-        f, ax = plt.subplots()
+        f, axes = plt.subplots()
 
     for xval in xvalues:
         axes.axvline(xval, zorder=3, color=line_color, linewidth=line_width)
 
     return axes
 
-    
+
 # %%  run some tests
 if __name__ == '__main__':
     plt.close('all')
