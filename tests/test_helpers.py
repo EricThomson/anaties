@@ -39,7 +39,13 @@ def test_file_exists(tmp_path):
 
 
 def test_get_bins():
-    assert False
+    """
+    This is fairly straightforward, but at some point could add
+    more thorough testing with different data types (ints)
+    """
+    bin_edges, bin_centers = helpers.get_bins(0, 20, bin_width=5)
+    assert np.array_equal(bin_edges, np.array([0., 5., 10., 15., 20.]))
+    assert np.array_equal(bin_centers, np.array([2.5, 7.5, 12.5, 17.5]))
 
 
 def test_get_offdiag_vals():

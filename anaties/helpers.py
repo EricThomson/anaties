@@ -61,9 +61,6 @@ def get_bins(min_edge, max_edge, bin_width=1):
     bin_edges = np.linspace(min_edge, max_edge, num_edges)
     bin_centers = np.linspace(min_edge+bin_width/2,
                               max_edge-bin_width/2, num_bins)
-    # bin_edges = np.arange(min_edge, max_edge + bin_width, bin_width)
-    # bin_centers = np.arange(min_edge + bin_width / 2,
-    #                         max_edge + bin_width / 2, bin_width)
     return bin_edges, bin_centers
 
 
