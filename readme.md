@@ -26,7 +26,7 @@ You can test it out with:
 
 All other functions are listed below.
 
-## Brief summary of all utilities  
+## Brief summary of all utilities
 
         signals.py (for 1d data arrays, or arrays of such arrays)
             - smooth: smooth a signal with a window (gaussian, etc)
@@ -45,6 +45,7 @@ All other functions are listed below.
             - vlines: add vertical lines to figure
 
         stats (basic statistical things)
+            - collective_correlation: collective correlation coefficient
             - med_semed: median and std error of median of an array
             - mean_sem: mean and std error of the mean of an array
             - mean_std: mean and standard deviation of an array
@@ -67,6 +68,7 @@ All other functions are listed below.
 
 ## To do: More important
 - finish adding tests.
+- use median instead of mean in spectrogram
 - add proper documentation and tests to stats module.
 - integrate vlines into pypi and version up (maybe good test for ci)
 - add ax return for all plot functions, when possible.

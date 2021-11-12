@@ -7,6 +7,31 @@ https://github.com/EricThomson/anaties
 import numpy as np
 
 
+def collective_correlation(x):
+    """
+    get collective correlation coefficient (aka generalized correlation)
+
+    input:
+        x: data array nxm (n observations, m variables)
+
+    outputs:
+        corr_coeff: correlation coefficient
+
+    Notes:
+       - Calculated as discussed in stack exchange:
+          https://math.stackexchange.com/a/3795338/52369
+       - If you get over/underflow errors for det(x), switch to np.slogdet()
+    """
+    # first get covariance matrix of x (ddof returns unbiased estimate)
+    cov_mat = np.cov(x, ddof=1, rowvar=False)
+    # product of all variances
+    variance_product = cov_mat.diagonal.prod()
+
+    cov_det = np.linalg.det(cov_mat)
+
+    return np.sqrt(1 - cov_det/variance_product)
+
+
 def med_semed(array, axis=None):
     """
     return median and std error of the median or numpy array
