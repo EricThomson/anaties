@@ -18,6 +18,7 @@ from .plots import plot_with_events
 from .plots import rect_highlight
 from .plots import vlines
 
+from .stats import collective_correlation
 from .stats import med_semed
 from .stats import mean_sem
 from .stats import mean_std
