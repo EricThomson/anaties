@@ -161,7 +161,6 @@ def rand_rgb(num_vals):
 
 if __name__ == '__main__':
     print("\nTesting anaties.helpers...")
-
     """
     Test datetime_string()
     """

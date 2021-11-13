@@ -17,6 +17,10 @@ def collective_correlation(x):
     outputs:
         corr_coeff: correlation coefficient
 
+
+    Example:
+
+
     Notes:
        - Calculated as discussed in stack exchange:
           https://math.stackexchange.com/a/3795338/52369
@@ -25,7 +29,7 @@ def collective_correlation(x):
     # first get covariance matrix of x (ddof returns unbiased estimate)
     cov_mat = np.cov(x, ddof=1, rowvar=False)
     # product of all variances
-    variance_product = cov_mat.diagonal.prod()
+    variance_product = cov_mat.diagonal().prod()
 
     cov_det = np.linalg.det(cov_mat)
 
@@ -103,4 +107,16 @@ def cramers_v(test_stat, n, df):
 
 
 if __name__ == '__main__':
-    print("no tests written for anaties.stats yet. come on bruv")
+    print("\nTesting anaties.stats...")
+    """
+    Test collective_correlation()
+    Make sure it works, make sure it reduces to pearson
+    """
+    print("\nanaties.stats: testing collective_correlation()...")
+    mean_foo = np.array([1, 1, 1])
+    data_foo = np.random.multivariate_normal(mean_foo, np.eye(3), 100)
+    cc = collective_correlation(data_foo)
+    print(f"collective corr={cc}")
+    cc_pear = np.corrcoef(data_foo[:, 0], data_foo[:, 1])
+    print(f"pearson corr c1 c2: {cc_pear}")
+    print(f"Collective corr c1,c2: {collective_correlation(data_foo[:,:2])}")
