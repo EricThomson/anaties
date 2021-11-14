@@ -133,7 +133,7 @@ def power_spec(data,
                             nperseg=segment_length,
                             noverlap=segment_overlap,
                             detrend='constant',
-                            average='mean',  # other option is 'median'
+                            average='median',  # median shown to be better
                             scaling=scaling)
 
     if plot_on:
@@ -321,7 +321,9 @@ def spectrogram(data,
         first_ind, last_ind = ind_limits(freqs, view_range)
         axs[1].pcolormesh(time_bins,
                           freqs[first_ind:last_ind],
-                          10*np.log10(spect[first_ind: last_ind, :]), cmap=colormap)
+                          10*np.log10(spect[first_ind: last_ind, :]),
+                          shading='auto',
+                          cmap=colormap)
         axs[1].set_ylabel('Frequency')
         axs[1].set_xlabel('t(s)')
         axs[1].autoscale(enable=True, axis='x', tight=True)
