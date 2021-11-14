@@ -56,7 +56,7 @@ def get_bins(min_edge, max_edge, bin_width=1):
     remainder = np.mod(max_edge - min_edge, bin_width)
     if remainder != 0:
         print("get_bins() Warning: bin_width may not exactly divide up the given range of values.")
-    num_bins = (max_edge-min_edge)//bin_width
+    num_bins = round((max_edge-min_edge)/bin_width)
     num_edges = num_bins+1
     bin_edges = np.linspace(min_edge, max_edge, num_edges)
     bin_centers = np.linspace(min_edge+bin_width/2,
@@ -171,8 +171,8 @@ if __name__ == '__main__':
     Test get_bins()
     """
     print("\nanaties.helpers: testing get_bins()...")
-    bin_edges, bin_centers = get_bins(0, 20, bin_width=5)
-    print("Bin edges/centers for min/max/width 0, 5, 20:")
+    bin_edges, bin_centers = get_bins(0, 3, bin_width=0.5)
+    print("Bin edges/centers for min/max/width 0, 3, 0.5:")
     print(f"{bin_edges}\n{bin_centers}")
 
     """

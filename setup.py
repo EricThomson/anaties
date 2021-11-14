@@ -14,7 +14,7 @@ long_description = (this_directory / "readme.md").read_text()
 
 setup(
     name='anaties',
-    version='0.1.4.3',
+    version='0.1.4.4',
     description="Common analysis utilities",
     author="Eric Thomson",
     author_email="thomson.eric@gmail.com",
