@@ -7,6 +7,7 @@ import datetime
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import warnings
 
 
 def datetime_string():
@@ -18,6 +19,9 @@ def datetime_string():
 
     Outputs:
         Single string of form' '_YYYYMMDD_HHMMSS' (year month day _ hour minute second)
+
+    To do:
+        add option to supress leading underscore.
     """
     return datetime.datetime.now().strftime("_%Y%m%d_%H%M%S")
 
@@ -36,31 +40,50 @@ def file_exists(filepath):
     return os.path.isfile(filepath)
 
 
-def get_bins(min_edge, max_edge, bin_width=1):
+def get_bins(min_edge, max_edge, bin_width=1, suppress_warning=False):
     """
-    return array of bin edges/center
+    return array of bin edges/bin centers, given min/max values and bin_width
+
+    Note:
+    Creates floor(max_edge-min_edge)/bin_width bins.
+    Throws warning if bin width does not evenly divide range of values.
 
     Inputs:
         min_edge: scalar lower bound
         max_edge: scalar upper bound
         bin_width: scalar bin width to divide up the range
+        suppress_warning: boolean suppress warning for not evenly divisible range
 
     Outputs:
-        bin_edges:
-        bin_centers
+        bin_edges: 1d array
+        bin_centers: 1d array
 
     Example:
         bin_edges, bin_centers = get_bins(0, 20, bin_width = 5)
-    """
+        #to generate warning: 0, 4.5, 1/3
 
-    remainder = np.mod(max_edge - min_edge, bin_width)
-    if remainder != 0:
-        print("get_bins() Warning: bin_width may not exactly divide up the given range of values.")
-    num_bins = round((max_edge-min_edge)/bin_width)
+    Notes:
+        bin_centers vectorization from: https://stackoverflow.com/a/23856065/1886357
+    """
+    if min_edge >= max_edge:
+        raise ValueError("get_bins(): max_edge must be larger than min_edge")
+    val_range = max_edge - min_edge
+    num_bins = val_range/bin_width
+
+    # make sure the bin_width evenly divides up the range of values
+    if not suppress_warning:
+        bin_remainder = num_bins % 1
+        if bin_remainder != 0:
+            msg1 = "get_bins(): range not evenly divisible by bin_width."
+            msg2 = f"\nrange = {val_range}, bin width = {bin_width}"
+            warning_message = msg1 + msg2
+            warnings.warn(warning_message)
+
+    num_bins = int(num_bins)
     num_edges = num_bins+1
     bin_edges = np.linspace(min_edge, max_edge, num_edges)
-    bin_centers = np.linspace(min_edge+bin_width/2,
-                              max_edge-bin_width/2, num_bins)
+
+    bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
     return bin_edges, bin_centers
 
 
@@ -84,8 +107,8 @@ def get_offdiag_vals(array):
     Adapted from:
         https://stackoverflow.com/a/44395030/1886357
     """
-    assert is_symmetric(array), print(
-        "get_offdiag_vals() requires symmetric array")
+    if not is_symmetric(array):
+        raise ValueError("get_offdiag_vals() requires symmetric array")
     num_rows = array.shape[0]
     # get indices of lower diag, not inclucing diagonal
     offdiag_indices = np.tril_indices(num_rows, k=-1)
@@ -172,8 +195,8 @@ if __name__ == '__main__':
     """
     print("\nanaties.helpers: testing get_bins()...")
     bin_edges, bin_centers = get_bins(0, 3, bin_width=0.5)
-    print("Bin edges/centers for min/max/width 0, 3, 0.5:")
-    print(f"{bin_edges}\n{bin_centers}")
+    print("min, max, width: 0, 3, 0.5")
+    print(f"Bin edges: {bin_edges}\nBin centers: {bin_centers}")
 
     """
     Test get_offdiag_vals()
@@ -224,4 +247,6 @@ if __name__ == '__main__':
     print("\nanaties.helpers: tests done...")
 
 
+#
+#
 #

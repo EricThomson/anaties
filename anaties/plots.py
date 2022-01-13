@@ -222,10 +222,9 @@ def rect_highlight(shade_range, orientation='vert', color=(1, 1, 0), alpha=0.3, 
         alpha (float): level of transparency (0.3)
         ax (axes): axes object to paint upon (None)
 
-    Outputs: none -- just adds rectangle to current figure or axes input.
-
-    To do:
-        have it return axes so people can work with them!
+    Outputs:
+        axes: axes object
+        rect: rectangle object (so you do things like remove w/ rect.remove() )
 
     Notes
         - If you ever want to add multiple rects to different axes:
@@ -258,9 +257,10 @@ def rect_highlight(shade_range, orientation='vert', color=(1, 1, 0), alpha=0.3, 
     if ax is not None:
         ax.add_patch(rect)
     else:
-        plt.gca().add_patch(rect)
+        ax = plt.gca()
+        ax.add_patch(rect)
 
-    return
+    return ax, rect
 
 
 def twinx(x, y1, y2, ylabel1='y1', ylabel2='y2',
@@ -381,7 +381,7 @@ if __name__ == '__main__':
     ydat = np.sin(0.1*xdat)+np.random.normal(scale=0.1, size=xdat.shape)
     plt.plot(xdat, ydat, color='black', linewidth=0.5)
     plt.autoscale(enable=True, axis='x', tight=True)
-    rect_highlight([35, 55], orientation='vert', color=(1, 1, 0), alpha=0.8)
+    ax, rect = rect_highlight([35, 55], orientation='vert', color=(1, 1, 0), alpha=0.8)
     plt.grid()
 
     plt.show()
