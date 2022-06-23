@@ -173,13 +173,25 @@ def bandpass_filter(data, lowcut, highcut, sampling_frequency, order=5, plot_on=
     nyq = 0.5 * sampling_frequency
     low = lowcut / nyq
     high = highcut / nyq
-    butter_sos = signal.butter(
-        order, [low, high], analog=False, btype='band', output='sos')
+
+    if low <= 0 and high >= nyq:
+        print('bandpass_filter(): no filter applied. Returning original data.')
+        return data, None
+    elif low <= 0:
+        butter_sos = signal.butter(order, high, analog=False, btype='lowpass', output='sos')
+    elif high >= 1:
+        print("setting up high pass filter")
+        butter_sos = signal.butter(order, low, analog=False, btype='highpass', output='sos')
+    else:
+        print("setting up bandpass filter")
+        butter_sos = signal.butter(order, [low, high], analog=False, btype='bandpass', output='sos')
+
     filtered_data = signal.sosfiltfilt(butter_sos, data)
     if plot_on:
         print("Plotting")
         #  Filter
         w, h = signal.sosfreqz(butter_sos, worN=2000)
+        plt.figure()
         plt.subplot(2, 1, 1)
         plt.plot((sampling_frequency * 0.5 / np.pi) * w, abs(h))
         plt.axvline(lowcut, color='r', linewidth=0.5)
@@ -289,8 +301,7 @@ def spectrogram(data,
            values as the window drops to zero). This makes the FFT behave. Do not use
            boxcar I would stick with hann or similar.
     To do
-        - I had it using different colors for different events but removed this. Maybe add
-        this feature back at some point.
+        - I had it using different colors for different events but removed this. Maybe add this feature back at some point.
     """
     if data.ndim > 1:
         data = data.flatten()
@@ -343,6 +354,47 @@ def spectrogram(data,
 # %%  run some tests
 if __name__ == '__main__':
     plt.close('all')
+
+    """
+    test bandpass filter
+    """
+    print("\nanaties.signals: testing bandpass_filter()...")
+    f1 = 13
+    f2 = 27
+    f3 = 60
+    std = 0.4
+    num_points = 3_000   # Number of points
+    samp_freq = 2000
+    samp_pd = 1/samp_freq  # sampling period
+    duration = num_points * samp_pd
+    t = np.linspace(0.0, duration, num_points)
+    y_pure = np.sin(f1*2.0*np.pi * t) + np.sin(f2*2.0 *
+                                               np.pi * t) + np.sin(f3*2.0*np.pi * t)
+    y_noisy = y_pure + np.random.normal(loc=0, scale=std, size=y_pure.shape)
+    filter_order = 5  # can mess with t his
+
+
+    # low pass
+    print("testing low pass")
+    low_cut = 0
+    high_cut = 34
+    filtered_y, sos_filter = bandpass_filter(
+        y_noisy, low_cut, high_cut, samp_freq, order=5, plot_on=1)
+
+    # high pass
+    print("testing high pass")
+    low_cut = 50
+    high_cut = samp_freq/2
+    filtered_y, sos_filter = bandpass_filter(
+        y_noisy, low_cut, high_cut, samp_freq, order=5, plot_on=1)
+
+    # bandpass
+    print("testing true band pass")
+    low_cut = 5
+    high_cut = 35
+    filtered_y, sos_filter = bandpass_filter(
+        y_noisy, low_cut, high_cut, samp_freq, order=5, plot_on=1)
+
     """
     Test smooth
     """
@@ -452,28 +504,6 @@ if __name__ == '__main__':
     plt.suptitle('signals.notch filter test', y=1)
     plt.show()
 
-    """
-    test bandpass filter
-    """
-    print("\nanaties.signals: testing bandpass_filter()...")
-    samp_freq = 1000  # Sample frequency (Hz)
-    f1 = 13
-    f2 = 27
-    f3 = 60
-    std = 0.4
-    num_points = 3_000   # Number of points
-    samp_freq = 2000
-    samp_pd = 1/samp_freq  # sampling period
-    duration = num_points * samp_pd
-    t = np.linspace(0.0, duration, num_points)
-    y_pure = np.sin(f1*2.0*np.pi * t) + np.sin(f2*2.0 *
-                                               np.pi * t) + np.sin(f3*2.0*np.pi * t)
-    y_noisy = y_pure + np.random.normal(loc=0, scale=std, size=y_pure.shape)
-    low_cut = 20
-    high_cut = 34
-    filter_order = 5  # can mess with t his
-    filtered_y, sos_filter = bandpass_filter(
-        y_noisy, low_cut, high_cut, samp_freq, order=5, plot_on=1)
 
-    print("\nanaties.signals: tests done...")
+    print("\nanaties.signals: tests done!")
     # Tests done
