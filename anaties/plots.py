@@ -11,7 +11,7 @@ from .helpers import get_bins
 from .stats import mean_sem
 
 
-def error_shade(x, y, error_mag, line_color='k', line_width=1, shade_color='gray', alpha=0.3, ax=None):
+def error_shade(x, y, error_mag, line_color='k', line_width=1, shade_color='gray', alpha=0.3, ax=None, label=None):
     """
     plot x and y line +/- shaded error region.
     Currently provides minimal properties for changing line (color and linewidth)
@@ -24,6 +24,7 @@ def error_shade(x, y, error_mag, line_color='k', line_width=1, shade_color='gray
         line_width (1): width of line
         shade_color ('gray'): color for shaded error region
         alpha (0.3): transparency of shaded region
+        label (None): optional label for legend 
         ax (None): axes object if you are plotting it in another figure
 
     outputs:
@@ -34,7 +35,7 @@ def error_shade(x, y, error_mag, line_color='k', line_width=1, shade_color='gray
         f, ax = plt.subplots()
     ax.fill_between(x, y+error_mag, y-error_mag,
                     alpha=alpha, color=shade_color)
-    ax.plot(x, y, color=line_color, linewidth=line_width)
+    ax.plot(x, y, color=line_color, linewidth=line_width, label=label)
     return ax
 
 
