@@ -160,9 +160,9 @@ def is_symmetric(array, abs_tol=1e-8, rel_tol=1e-5):
         https://stackoverflow.com/a/65909907/1886357
     """
     if abs_tol is None or rel_tol is None:
-        symmetry = np.array_equal(array, array.T)
+        symmetry = np.array_equal(array, array.T, equal_nan=True)
     else:
-        symmetry = np.allclose(array, array.T, rtol=abs_tol, atol=abs_tol)
+        symmetry = np.allclose(array, array.T, rtol=abs_tol, atol=abs_tol, equal_nan=True)
 
     return symmetry
 
