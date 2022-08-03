@@ -68,6 +68,7 @@ All other functions are listed below.
 
 ## To do: More important
 - finish adding tests.
+- plots.rect_highlight should just use axvspan/axhspan!
 - use median instead of mean in spectrogram
 - add proper documentation and tests to stats module.
 - integrate vlines into pypi and version up (maybe good test for ci)
